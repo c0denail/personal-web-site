@@ -1,6 +1,6 @@
 # Build outputs
 .next
-.netlify
+.vercel
 .wrangler
 .vinext
 .output
