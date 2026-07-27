@@ -1,10 +1,15 @@
-# Nuxt dev/build outputs
+# Build outputs
+.next
+.netlify
+.wrangler
+.vinext
 .output
 .data
 .nuxt
 .nitro
 .cache
 dist
+next-env.d.ts
  
 # Node dependencies
 node_modules
