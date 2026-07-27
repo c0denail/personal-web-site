@@ -181,7 +181,11 @@ export default function Home() {
   const [activeAddOns, setActiveAddOns] = useState<string[]>([]);
   const [selectedService, setSelectedService] = useState("Web deneyimleri");
   const [openFaq, setOpenFaq] = useState(0);
-  const [toast, setToast] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    status: "success" | "error";
+  } | null>(null);
   const commandRef = useRef<HTMLInputElement>(null);
   const words = useMemo(
     () => ["web deneyimleri.", "AI ajanları.", "oyunlar.", "mobil uygulamalar."],
@@ -343,33 +347,47 @@ export default function Home() {
     scrollTo("contact");
   };
 
-  const submitContact = (event: FormEvent<HTMLFormElement>) => {
+  const submitContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const subject = encodeURIComponent(
-      `Yeni proje talebi — ${String(formData.get("service") || "Genel")}`,
-    );
-    const body = encodeURIComponent(
-      [
-        `İsim: ${formData.get("name")}`,
-        `E-posta: ${formData.get("email")}`,
-        `Şirket / marka: ${formData.get("company") || "Belirtilmedi"}`,
-        `İlgilenilen hizmet: ${formData.get("service")}`,
-        `Bütçe: ${formData.get("budget")}`,
-        "",
-        "Proje notu:",
-        formData.get("message"),
-      ].join("\n"),
-    );
-    setToast("E-posta taslağın hazırlanıyor…");
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-    window.setTimeout(() => setToast(""), 3200);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    setIsSubmitting(true);
+    setToast(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(formData)),
+      });
+      const result = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(result.message || "Mesaj gönderilemedi.");
+      }
+
+      form.reset();
+      setSelectedService("Web deneyimleri");
+      setToast({
+        message: "Talebin ulaştı. En kısa sürede dönüş yapacağım.",
+        status: "success",
+      });
+    } catch (error) {
+      setToast({
+        message: error instanceof Error ? error.message : "Mesaj gönderilemedi.",
+        status: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+      window.setTimeout(() => setToast(null), 4200);
+    }
   };
 
   const copyEmail = async () => {
     await navigator.clipboard.writeText(CONTACT_EMAIL);
-    setToast("E-posta adresi kopyalandı.");
-    window.setTimeout(() => setToast(""), 2400);
+    setToast({ message: "E-posta adresi kopyalandı.", status: "success" });
+    window.setTimeout(() => setToast(null), 2400);
   };
 
   return (
@@ -951,10 +969,19 @@ export default function Home() {
                   required
                 />
               </label>
+              <label className="contact-honeypot" aria-hidden="true">
+                <span>WEB SİTESİ</span>
+                <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </label>
               <div className="form-submit">
-                <span>Form, e-posta uygulamanda güvenli bir taslak oluşturur.</span>
-                <button className="primary-button" type="submit">
-                  Talebi gönder <span>↗</span>
+                <span>Talebin güvenli biçimde doğrudan bize iletilir.</span>
+                <button
+                  className="primary-button"
+                  type="submit"
+                  disabled={isSubmitting}
+                  aria-busy={isSubmitting}
+                >
+                  {isSubmitting ? "Gönderiliyor…" : "Talebi gönder"} <span>↗</span>
                 </button>
               </div>
             </div>
@@ -986,7 +1013,12 @@ export default function Home() {
         </div>
       </footer>
 
-      {toast && <div className="toast" role="status"><span>✓</span>{toast}</div>}
+      {toast && (
+        <div className={`toast toast-${toast.status}`} role="status">
+          <span>{toast.status === "success" ? "✓" : "!"}</span>
+          {toast.message}
+        </div>
+      )}
     </main>
   );
 }

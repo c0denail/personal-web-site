@@ -1903,6 +1903,21 @@ button {
   line-height: 1.5;
 }
 
+.contact-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.form-submit .primary-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
+}
+
 footer {
   position: relative;
   z-index: 1;
@@ -2000,6 +2015,14 @@ footer {
 
 .toast span {
   color: var(--accent);
+}
+
+.toast-error {
+  border-color: #ff6b6b;
+}
+
+.toast-error span {
+  color: #ff6b6b;
 }
 
 [data-reveal] {
