@@ -2,7 +2,7 @@
 
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 
-const CONTACT_EMAIL = "emirhan.tuncer@fairteknoloji.com";
+const CONTACT_EMAIL = "info@c0denail.com";
 
 const services = [
   {
