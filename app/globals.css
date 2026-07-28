@@ -935,10 +935,16 @@ button {
   color: var(--accent);
 }
 
+.card-arrow {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+}
+
 .service-arrow {
   justify-self: end;
   color: var(--text);
-  font-size: 22px;
   transition: transform 200ms ease;
 }
 
@@ -1235,9 +1241,10 @@ button {
 .project-info > button {
   width: 42px;
   height: 42px;
+  display: grid;
+  place-items: center;
   border: 1px solid var(--line);
   background: transparent;
-  font-size: 20px;
   cursor: pointer;
   transition: background 180ms ease, color 180ms ease;
 }

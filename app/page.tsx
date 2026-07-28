@@ -966,7 +966,7 @@ export default function Home() {
               <div className="service-top">
                 <span className="service-number">[{service.icon}]</span>
                 <span className="service-command">{service.command}</span>
-                <span className="service-arrow">↗</span>
+                <span className="service-arrow card-arrow" aria-hidden="true">↗</span>
               </div>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
@@ -1022,7 +1022,7 @@ export default function Home() {
                     <h3>{project.title}</h3>
                   </div>
                   <button onClick={() => scrollTo("contact")} aria-label={`${project.title} benzeri proje konuş`}>
-                    ↗
+                    <span className="card-arrow" aria-hidden="true">↗</span>
                   </button>
                   <p>{project.description}</p>
                   <div className="tag-row">
