@@ -108,38 +108,349 @@ const projects = [
   },
 ];
 
-const packages = [
+const packageCategories = [
   {
-    id: "launch",
-    name: "Launch",
-    price: 45000,
-    note: "Hızlı ve güçlü bir başlangıç",
-    includes: ["Tek sayfa özel tasarım", "Mobil uyum", "Temel SEO", "2 revizyon"],
-    duration: "2–3 hafta",
+    id: "finance",
+    name: "Finans Sistemleri",
+    description: "Finansal veriyi anlaşılır, güvenli ve işlem yapılabilir ürünlere dönüştüren paketler.",
+    packages: [
+      {
+        id: "finance-start",
+        level: "start",
+        name: "Finans Başlangıç",
+        price: 39000,
+        note: "Temel finans verilerini tek ekranda izlemek isteyen ürünler için hızlı başlangıç.",
+        includes: [
+          "Keşif çalışması ve finansal veri modeli",
+          "Güvenli giriş ve kullanıcı hesabı",
+          "Gelir, gider veya portföy dashboard’u",
+          "Manuel veri girişi ve CSV içe aktarma",
+          "Mobil uyumlu temel arayüz",
+          "Yayın kurulumu ve 2 revizyon",
+        ],
+        duration: "2–4 hafta",
+      },
+      {
+        id: "finance-product",
+        level: "product",
+        name: "Finans Ürün",
+        price: 69000,
+        note: "Canlı veriler ve gelişmiş raporlarla kullanıma hazır finansal ürün MVP’si.",
+        includes: [
+          "Başlangıç paketindeki tüm özellikler",
+          "Banka, piyasa veya özel API bağlantısı",
+          "Canlı grafikler ve karşılaştırmalı analiz",
+          "Yönetici, ekip ve müşteri rolleri",
+          "PDF / Excel raporlama ve dışa aktarma",
+          "Bildirimler, testler ve 14 gün destek",
+        ],
+        duration: "4–7 hafta",
+        featured: true,
+      },
+      {
+        id: "finance-scale",
+        level: "scale",
+        name: "Finans Ölçek",
+        price: 109000,
+        note: "Birden fazla kullanıcı grubuna hizmet veren ölçeklenebilir finans platformu.",
+        includes: [
+          "Ürün stratejisi ve teknik mimari",
+          "Çoklu şirket / müşteri yapısı",
+          "Özel işlem ve onay akışları",
+          "Gelişmiş analiz, risk ve performans ekranları",
+          "Yönetim paneli, audit log ve güvenlik katmanı",
+          "Yük testi, yayın planı ve 30 gün destek",
+        ],
+        duration: "7–10 hafta",
+      },
+    ],
   },
   {
-    id: "product",
-    name: "Product",
-    price: 95000,
-    note: "Büyümeye hazır dijital ürün",
-    includes: ["Çok sayfalı deneyim", "UI sistem", "CMS / API bağlantısı", "4 revizyon"],
-    duration: "4–6 hafta",
-    featured: true,
+    id: "agents",
+    name: "AI Ajanları",
+    description: "Tek görevli yardımcıdan çok araçlı operasyon ajanlarına kadar iş akışına özel çözümler.",
+    packages: [
+      {
+        id: "agents-start",
+        level: "start",
+        name: "Ajan Başlangıç",
+        price: 29000,
+        note: "Tek bir iş problemini çözen, kontrollü ve ölçülebilir AI ajanı.",
+        includes: [
+          "Kullanım senaryosu ve başarı kriterleri",
+          "Tek görevli özel AI ajanı",
+          "Prompt ve sistem davranışı tasarımı",
+          "1 araç veya API entegrasyonu",
+          "Temel hata kontrolü ve test senaryoları",
+          "Kurulum dokümanı ve 2 revizyon",
+        ],
+        duration: "2–3 hafta",
+      },
+      {
+        id: "agents-product",
+        level: "product",
+        name: "Workflow Ajanı",
+        price: 49000,
+        note: "Birden fazla adımı ve aracı yöneten, ekip onaylı üretim ajanı.",
+        includes: [
+          "Çok adımlı görev ve karar akışı",
+          "3 adede kadar araç / API entegrasyonu",
+          "Doküman ve bilgi tabanı bağlantısı",
+          "İnsan onayı ve geri bildirim noktaları",
+          "Çalışma geçmişi ve yönetim ekranı",
+          "Değerlendirme raporu ve 14 gün destek",
+        ],
+        duration: "3–5 hafta",
+        featured: true,
+      },
+      {
+        id: "agents-scale",
+        level: "scale",
+        name: "Ajan Platformu",
+        price: 89000,
+        note: "Birden fazla ajanı, kullanıcıyı ve iş sürecini tek merkezden yöneten sistem.",
+        includes: [
+          "Çoklu ajan mimarisi ve görev dağıtımı",
+          "Rol bazlı kullanıcı ve yetki sistemi",
+          "CRM, e-posta ve operasyon bağlantıları",
+          "Kalıcı hafıza ve kurumsal bilgi katmanı",
+          "Guardrail, değerlendirme ve maliyet takibi",
+          "Canlıya geçiş planı ve 30 gün destek",
+        ],
+        duration: "6–9 hafta",
+      },
+    ],
   },
   {
-    id: "scale",
-    name: "Scale",
-    price: 150000,
-    note: "Özel kapsam, uzun vadeli ortaklık",
-    includes: ["Ürün stratejisi", "Özel entegrasyonlar", "AI / otomasyon", "Öncelikli destek"],
-    duration: "6+ hafta",
+    id: "games",
+    name: "Açık Dünya Oyunları",
+    description: "Fikir doğrulamadan yatırımcıya veya yayıncıya sunulabilir oynanabilir sürüme kadar.",
+    packages: [
+      {
+        id: "games-start",
+        level: "start",
+        name: "Oynanabilir Konsept",
+        price: 39000,
+        note: "Oyunun temel fikrini ve eğlence potansiyelini test eden kompakt demo.",
+        includes: [
+          "Oyun fikri ve ana döngü tasarımı",
+          "Tek oynanabilir alan / bölüm",
+          "Karakter hareketi ve kamera sistemi",
+          "Temel etkileşim ve görev prototipi",
+          "Geçici UI ve oyun içi yönlendirme",
+          "Masaüstü veya web demo teslimi",
+        ],
+        duration: "3–5 hafta",
+      },
+      {
+        id: "games-product",
+        level: "product",
+        name: "Dünya Prototipi",
+        price: 74000,
+        note: "Keşif, görev ve ilerleme sistemlerini birleştiren kapsamlı oyun prototipi.",
+        includes: [
+          "Harita, bölge ve biyom prototipi",
+          "Envanter, görev ve ilerleme sistemi",
+          "NPC davranışları ve temel düşman AI’ı",
+          "Kayıt / yükleme ve kontrol ayarları",
+          "Performans optimizasyonunun ilk aşaması",
+          "2 playtest sürümü ve sonuç raporu",
+        ],
+        duration: "5–8 hafta",
+        featured: true,
+      },
+      {
+        id: "games-scale",
+        level: "scale",
+        name: "Vertical Slice",
+        price: 119000,
+        note: "Oyunun nihai kalitesini temsil eden, sunuma hazır cilalı üretim dilimi.",
+        includes: [
+          "Görsel yön ve üretim standardı",
+          "Cilalı açık dünya bölgesi",
+          "Savaş, görev ve karakter gelişimi",
+          "Özgün UI, ses ve geri bildirim katmanı",
+          "Hedef cihazlarda performans çalışması",
+          "Yayıncı sunumu ve üretim yol haritası",
+        ],
+        duration: "8–12 hafta",
+      },
+    ],
+  },
+  {
+    id: "web",
+    name: "Web & E-Ticaret",
+    description: "Marka sitesinden satış ve büyüme altyapısına kadar hızlı, yönetilebilir web ürünleri.",
+    packages: [
+      {
+        id: "web-start",
+        level: "start",
+        name: "Launch Site",
+        price: 24000,
+        note: "Markanı net anlatan, hızlı açılan ve yayına hazır profesyonel web sitesi.",
+        includes: [
+          "1–5 sayfa özel arayüz tasarımı",
+          "Mobil, tablet ve masaüstü uyumu",
+          "İletişim formu ve temel entegrasyonlar",
+          "Teknik SEO ve performans ayarları",
+          "Analytics ve arama motoru kurulumu",
+          "Yayın, alan adı bağlantısı ve 2 revizyon",
+        ],
+        duration: "2–3 hafta",
+      },
+      {
+        id: "web-product",
+        level: "product",
+        name: "Commerce Pro",
+        price: 35000,
+        note: "Ürünlerini yönetip güvenli biçimde satış yapabileceğin e-ticaret sistemi.",
+        includes: [
+          "Özel mağaza ve ürün sayfası tasarımı",
+          "Ürün, kategori ve stok yönetimi",
+          "Sepet, ödeme ve sipariş akışları",
+          "Yönetim paneli veya CMS bağlantısı",
+          "E-posta bildirimleri ve temel raporlar",
+          "SEO, hız optimizasyonu ve 14 gün destek",
+        ],
+        duration: "3–5 hafta",
+        featured: true,
+      },
+      {
+        id: "web-scale",
+        level: "scale",
+        name: "Growth Platform",
+        price: 69000,
+        note: "İçerik, satış ve otomasyonu tek altyapıda buluşturan büyüme platformu.",
+        includes: [
+          "Çok dilli ve çok bölgeli yapı",
+          "Gelişmiş filtre, arama ve ürün varyantları",
+          "CRM, pazarlama ve muhasebe bağlantıları",
+          "Blog, kampanya ve landing page sistemi",
+          "Dönüşüm analitiği ve A/B test altyapısı",
+          "Ekip eğitimi, yayın planı ve 30 gün destek",
+        ],
+        duration: "6–9 hafta",
+      },
+    ],
+  },
+  {
+    id: "mobile",
+    name: "Mobil Uygulamalar",
+    description: "Fikir prototipinden mağazalarda yayınlanabilir iOS ve Android ürünlerine kadar.",
+    packages: [
+      {
+        id: "mobile-start",
+        level: "start",
+        name: "Mobil Prototip",
+        price: 39000,
+        note: "Ana fikri gerçek cihazda test etmeyi sağlayan işlevsel mobil prototip.",
+        includes: [
+          "Kullanıcı akışları ve ekran planı",
+          "5 temel ekranın özel tasarımı",
+          "React Native uygulama altyapısı",
+          "Yerel veri ve temel etkileşimler",
+          "Android ve iOS test sürümleri",
+          "Demo teslimi ve 2 revizyon",
+        ],
+        duration: "3–4 hafta",
+      },
+      {
+        id: "mobile-product",
+        level: "product",
+        name: "Mobil MVP",
+        price: 64000,
+        note: "Gerçek kullanıcılarla yayına çıkabilecek temel özelliklere sahip mobil ürün.",
+        includes: [
+          "iOS ve Android üretim uygulaması",
+          "Kayıt, giriş ve kullanıcı profili",
+          "API, veritabanı ve bulut bağlantısı",
+          "Push bildirimleri ve temel yönetim ekranı",
+          "Analitik ve hata izleme kurulumu",
+          "App Store / Google Play yayın hazırlığı",
+        ],
+        duration: "5–8 hafta",
+        featured: true,
+      },
+      {
+        id: "mobile-scale",
+        level: "scale",
+        name: "Mobil Ölçek",
+        price: 109000,
+        note: "Gelir modeli, gelişmiş modüller ve operasyon araçlarıyla ölçeklenebilir uygulama.",
+        includes: [
+          "Gelişmiş kullanıcı ve içerik modülleri",
+          "Abonelik, ödeme veya üyelik sistemi",
+          "Çevrimdışı kullanım ve veri senkronizasyonu",
+          "Gelişmiş analitik ve crash monitoring",
+          "CI/CD ve mağaza sürüm yönetimi",
+          "Performans testi ve 30 gün destek",
+        ],
+        duration: "8–12 hafta",
+      },
+    ],
+  },
+  {
+    id: "automation",
+    name: "İşletme Otomasyonu",
+    description: "Tek bir tekrarlı görevden bütün operasyonu yöneten akıllı işletme sistemine kadar.",
+    packages: [
+      {
+        id: "automation-start",
+        level: "start",
+        name: "Süreç Başlangıç",
+        price: 29000,
+        note: "Zaman kaybettiren tek bir iş akışını otomatikleştiren sade çözüm.",
+        includes: [
+          "Süreç analizi ve darboğaz haritası",
+          "Tek ana otomasyon akışı",
+          "1 harici servis entegrasyonu",
+          "Basit takip ve durum paneli",
+          "E-posta / mesaj bildirimleri",
+          "Kurulum dokümanı ve ekip anlatımı",
+        ],
+        duration: "2–3 hafta",
+      },
+      {
+        id: "automation-product",
+        level: "product",
+        name: "Operasyon Merkezi",
+        price: 44000,
+        note: "Müşteri, stok, görev ve raporlamayı tek panelde birleştiren işletme sistemi.",
+        includes: [
+          "CRM, stok veya görevden 3 ana modül",
+          "Kullanıcı rolleri ve ekip yetkileri",
+          "Canlı operasyon ve raporlama paneli",
+          "3 adede kadar servis entegrasyonu",
+          "Excel içe / dışa aktarma ve bildirimler",
+          "Veri aktarımı, eğitim ve 14 gün destek",
+        ],
+        duration: "4–6 hafta",
+        featured: true,
+      },
+      {
+        id: "automation-scale",
+        level: "scale",
+        name: "Akıllı Operasyon",
+        price: 79000,
+        note: "Departmanlar arası süreçleri ve karar noktalarını uçtan uca yöneten platform.",
+        includes: [
+          "Uçtan uca çok departmanlı iş akışları",
+          "AI destekli belge ve talep işleme",
+          "Gelişmiş raporlar ve yönetici ekranları",
+          "Onay mekanizmaları ve audit log",
+          "Yedekleme, güvenlik ve hata senaryoları",
+          "Canlıya geçiş planı ve 30 gün destek",
+        ],
+        duration: "6–9 hafta",
+      },
+    ],
   },
 ];
 
 const addOns = [
-  { id: "brand", label: "Marka yönü", price: 18000 },
-  { id: "copy", label: "İçerik & metin", price: 12000 },
-  { id: "speed", label: "Öncelikli teslim", price: 25000 },
+  { id: "brand", label: "Marka yönü", price: 15000 },
+  { id: "copy", label: "İçerik & metin", price: 10000 },
+  { id: "speed", label: "Öncelikli teslim", price: 20000 },
 ];
 
 const faqs = [
@@ -177,7 +488,8 @@ export default function Home() {
   const [terminalLines, setTerminalLines] = useState<string[]>([
     "Bağlantı güvenli. Kullanılabilir komutlar için “help” yaz.",
   ]);
-  const [activePackage, setActivePackage] = useState("product");
+  const [activeCategory, setActiveCategory] = useState("web");
+  const [activePackage, setActivePackage] = useState("web-product");
   const [activeAddOns, setActiveAddOns] = useState<string[]>([]);
   const [selectedService, setSelectedService] = useState("Web deneyimleri");
   const [openFaq, setOpenFaq] = useState(0);
@@ -285,7 +597,7 @@ export default function Home() {
       about: "Emirhan; fikirleri çalışan, hissedilen dijital ürünlere dönüştürür.",
       services: "Web deneyimleri · AI ajanları & otomasyon · Oyun geliştirme · Mobil uygulama",
       work: "Finans · AI ajanları · Oyun · Web · Mobil · Otomasyon — vitrine ışınlanıyor…",
-      pricing: "Launch 45K · Product 95K · Scale 150K+",
+      pricing: "6 kategori · 18 paket · 24K’dan başlayan proje seçenekleri",
       contact: `Bağlantı kanalı: ${CONTACT_EMAIL}`,
       theme: `Tema ${theme === "dark" ? "aydınlık" : "karanlık"} moda geçirildi.`,
     };
@@ -321,7 +633,11 @@ export default function Home() {
     event.currentTarget.style.setProperty("--rotate-y", "0deg");
   };
 
-  const chosenPackage = packages.find((item) => item.id === activePackage) || packages[1];
+  const selectedCategory =
+    packageCategories.find((item) => item.id === activeCategory) || packageCategories[3];
+  const visiblePackages = selectedCategory.packages;
+  const chosenPackage =
+    visiblePackages.find((item) => item.id === activePackage) || visiblePackages[1];
   const total =
     chosenPackage.price +
     addOns
@@ -329,11 +645,23 @@ export default function Home() {
       .reduce((sum, item) => sum + item.price, 0);
 
   const choosePackage = (packageId: string) => {
-    const pack = packages.find((item) => item.id === packageId);
+    const pack = visiblePackages.find((item) => item.id === packageId);
     if (!pack) return;
     setActivePackage(packageId);
-    setSelectedService(`${pack.name} paketi`);
+    setSelectedService(`${selectedCategory.name} — ${pack.name}`);
     document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  const chooseCategory = (categoryId: string) => {
+    const category = packageCategories.find((item) => item.id === categoryId);
+    if (!category) return;
+    const recommendedPackage =
+      category.packages.find((item) => item.featured) || category.packages[0];
+
+    setActiveCategory(categoryId);
+    setActivePackage(recommendedPackage.id);
+    setActiveAddOns([]);
+    setSelectedService(category.name);
   };
 
   const toggleAddOn = (id: string) => {
@@ -343,7 +671,9 @@ export default function Home() {
   };
 
   const requestOffer = () => {
-    setSelectedService(`${chosenPackage.name} paketi — ${formatMoney(total)}`);
+    setSelectedService(
+      `${selectedCategory.name} — ${chosenPackage.name} — ${formatMoney(total)}`,
+    );
     scrollTo("contact");
   };
 
@@ -761,20 +1091,50 @@ export default function Home() {
               <span>05</span>
               <span>/ PRICING.CONFIG</span>
             </div>
-            <h2>Net başlangıçlar,<br /><span>esnek kapsamlar.</span></h2>
-            <p>İhtiyacına en yakın paketi seç; birlikte son hâlini verelim.</p>
+            <h2>Ürününe özel,<br /><span>net başlangıçlar.</span></h2>
+            <p>Önce ürün kategorini, ardından ihtiyacına uygun paket seviyesini seç.</p>
           </div>
 
-          <div className="package-grid">
-            {packages.map((pack) => (
+          <div
+            className="package-category-tabs"
+            role="group"
+            aria-label="Paket kategorileri"
+            data-reveal
+          >
+            {packageCategories.map((category, index) => (
+              <button
+                key={category.id}
+                id={`category-${category.id}`}
+                type="button"
+                aria-pressed={activeCategory === category.id}
+                aria-controls="package-panel"
+                className={activeCategory === category.id ? "active" : ""}
+                onClick={() => chooseCategory(category.id)}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{category.name}</strong>
+              </button>
+            ))}
+          </div>
+
+          <div className="package-category-copy" aria-live="polite">
+            <span>SEÇİLİ KATEGORİ</span>
+            <strong>{selectedCategory.name}</strong>
+            <p>{selectedCategory.description}</p>
+          </div>
+
+          <div
+            className="package-grid"
+            id="package-panel"
+          >
+            {visiblePackages.map((pack) => (
               <article
                 key={pack.id}
                 className={`package-card ${pack.featured ? "featured" : ""} ${activePackage === pack.id ? "active" : ""}`}
-                data-reveal
               >
-                {pack.featured && <span className="popular-badge">EN ÇOK TERCİH EDİLEN</span>}
+                {pack.featured && <span className="popular-badge">KATEGORİNİN ÖNERİLEN PAKETİ</span>}
                 <div className="package-head">
-                  <span>/{pack.id}</span>
+                  <span>/{selectedCategory.id}/{pack.level}</span>
                   <span>{pack.duration}</span>
                 </div>
                 <h3>{pack.name}</h3>
@@ -782,7 +1142,7 @@ export default function Home() {
                 <div className="price">
                   <small>başlangıç</small>
                   <strong>{formatMoney(pack.price)}</strong>
-                  {pack.id === "scale" && <span>+</span>}
+                  <span>+</span>
                 </div>
                 <ul>
                   {pack.includes.map((item) => (
@@ -800,13 +1160,13 @@ export default function Home() {
             <div className="calculator-copy">
               <span className="eyebrow"><span className="prompt">&gt;</span> quick_quote --interactive</span>
               <h3>Teklifini yapılandır</h3>
-              <p>Paketine eklemek istediğin modülleri seç. Tahmini toplam anında güncellensin.</p>
+              <p>Seçtiğin pakete ek modüller ekle; tahmini proje başlangıcı anında güncellensin.</p>
             </div>
             <div className="calculator-controls">
               <div className="selected-package">
                 <div>
                   <span>SEÇİLEN PAKET</span>
-                  <strong>{chosenPackage.name}</strong>
+                  <strong>{selectedCategory.name} / {chosenPackage.name}</strong>
                 </div>
                 <span>{formatMoney(chosenPackage.price)}</span>
               </div>

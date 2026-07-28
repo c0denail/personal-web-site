@@ -1357,16 +1357,91 @@ button {
   margin-inline: auto;
 }
 
+.package-category-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 54px;
+}
+
+.package-category-tabs button {
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.package-category-tabs button:hover,
+.package-category-tabs button.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, var(--panel));
+  color: var(--text);
+}
+
+.package-category-tabs button > span {
+  color: var(--accent);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+}
+
+.package-category-tabs button strong {
+  font-size: 12px;
+  letter-spacing: -0.01em;
+}
+
+.package-category-copy {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 5px 16px;
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-left: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+
+.package-category-copy > span {
+  grid-row: 1 / 3;
+  color: var(--faint);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.package-category-copy strong {
+  align-self: end;
+  font-size: 18px;
+}
+
+.package-category-copy p {
+  align-self: start;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
 .package-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-top: 66px;
+  gap: 42px 14px;
+  margin-top: 38px;
 }
 
 .package-card {
   position: relative;
-  min-height: 540px;
+  min-height: 670px;
   display: flex;
   flex-direction: column;
   padding: 32px;
@@ -1415,13 +1490,15 @@ button {
 }
 
 .package-card h3 {
+  min-height: 72px;
   margin: 40px 0 6px;
-  font-size: 34px;
+  font-size: clamp(27px, 2.5vw, 34px);
   letter-spacing: -0.04em;
+  line-height: 1.05;
 }
 
 .package-card > p {
-  min-height: 42px;
+  min-height: 84px;
   margin: 0;
   color: var(--muted);
   font-size: 12px;
@@ -2155,9 +2232,8 @@ footer {
     grid-template-columns: 1fr 1fr;
   }
 
-  .package-card:last-child {
-    grid-column: 1 / -1;
-    min-height: 470px;
+  .package-category-tabs {
+    grid-template-columns: 1fr 1fr;
   }
 
   .contact-layout {
@@ -2317,6 +2393,18 @@ footer {
   .project-grid,
   .package-grid {
     grid-template-columns: 1fr;
+  }
+
+  .package-category-tabs {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .package-category-tabs button {
+    min-width: 220px;
+    scroll-snap-align: start;
   }
 
   .project-card:first-child,
