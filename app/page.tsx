@@ -740,22 +740,6 @@ export default function Home() {
       <div className="pointer-glow" aria-hidden="true" />
       <div className="noise" aria-hidden="true" />
 
-      <aside className="floating-socials" aria-label="Sosyal medya bağlantıları">
-        {socialLinks.map(({ label, href, Icon }) => (
-          <a
-            key={label}
-            className="floating-social-link"
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${label} profilini yeni sekmede aç`}
-            data-label={label}
-          >
-            <Icon aria-hidden="true" focusable="false" />
-          </a>
-        ))}
-      </aside>
-
       <header className="site-header">
         <a className="brand" href="#home" aria-label="c0denail ana sayfa">
           <span className="brand-mark">&gt;_</span>
@@ -771,6 +755,21 @@ export default function Home() {
         </nav>
 
         <div className="header-actions">
+          <div className="header-socials" aria-label="Sosyal medya bağlantıları">
+            {socialLinks.map(({ label, href, Icon }) => (
+              <a
+                key={label}
+                className="header-social-link"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${label} profilini yeni sekmede aç`}
+                title={label}
+              >
+                <Icon aria-hidden="true" focusable="false" />
+              </a>
+            ))}
+          </div>
           <button className="theme-toggle" onClick={toggleTheme} aria-label="Temayı değiştir">
             <span className="theme-icon">{theme === "dark" ? "☼" : "◐"}</span>
             <span>{theme === "dark" ? "LIGHT" : "DARK"}</span>
