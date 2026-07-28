@@ -1,8 +1,22 @@
 "use client";
 
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FaInstagram, FaLinkedinIn } from "react-icons/fa6";
 
 const CONTACT_EMAIL = "info@c0denail.com";
+
+const socialLinks = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/c0denail",
+    Icon: FaInstagram,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/emirhan-tuncer-96106a318",
+    Icon: FaLinkedinIn,
+  },
+];
 
 const services = [
   {
@@ -725,6 +739,22 @@ export default function Home() {
       <div className="scroll-progress" aria-hidden="true" />
       <div className="pointer-glow" aria-hidden="true" />
       <div className="noise" aria-hidden="true" />
+
+      <aside className="floating-socials" aria-label="Sosyal medya bağlantıları">
+        {socialLinks.map(({ label, href, Icon }) => (
+          <a
+            key={label}
+            className="floating-social-link"
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${label} profilini yeni sekmede aç`}
+            data-label={label}
+          >
+            <Icon aria-hidden="true" focusable="false" />
+          </a>
+        ))}
+      </aside>
 
       <header className="site-header">
         <a className="brand" href="#home" aria-label="c0denail ana sayfa">
