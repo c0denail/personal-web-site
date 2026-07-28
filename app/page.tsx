@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { FaInstagram, FaLinkedinIn } from "react-icons/fa6";
+import { projects } from "./data/projects";
 
 const CONTACT_EMAIL = "info@c0denail.com";
 
@@ -50,75 +52,6 @@ const services = [
       "iOS ve Android için hızlı, akıcı ve kullanıcıların tekrar dönmek isteyeceği uygulamalar.",
     tags: ["iOS", "Android", "React Native", "App Store"],
     command: "npx expo start",
-  },
-];
-
-const projects = [
-  {
-    id: "finance",
-    index: "01",
-    title: "FİNANS SİSTEMLERİ",
-    category: "Fintech / Web & Mobile",
-    description: "Takip, analiz ve işlem akışlarını birleştiren finans ürünleri.",
-    stack: ["Fintech", "Real-time Data", "Dashboard"],
-    label: "FIN",
-    labelDetail: "Finans Uygulamaları",
-    tone: "violet",
-  },
-  {
-    id: "agents",
-    index: "02",
-    title: "AI AJANLARI",
-    category: "Artificial Intelligence / Automation",
-    description: "Görev yürüten ve iş akışlarına bağlanan özel yapay zekâ ajanları.",
-    stack: ["LLM", "Tool Use", "Workflow"],
-    label: "AGENT",
-    labelDetail: "Akıllı İş Ajanları",
-    tone: "green",
-  },
-  {
-    id: "games",
-    index: "03",
-    title: "AÇIK DÜNYA OYUNLARI",
-    category: "Game Development / Open World",
-    description: "Açık dünya yapısı ve etkileşimli mekaniklere sahip oyun projeleri.",
-    stack: ["World Design", "Gameplay Systems", "Optimization"],
-    label: "GAME",
-    labelDetail: "Açık Dünya Oyunları 2D-3D",
-    tone: "orange",
-  },
-  {
-    id: "web",
-    index: "04",
-    title: "WEB & E-TİCARET",
-    category: "Web / Commerce & Content",
-    description: "Kurumsal web, blog ve satış odaklı e-ticaret deneyimleri.",
-    stack: ["E-commerce", "Blog", "SEO"],
-    label: "WEB",
-    labelDetail: "Web Sitesi ve Araçları",
-    tone: "blue",
-  },
-  {
-    id: "mobile",
-    index: "05",
-    title: "MOBİL UYGULAMALAR",
-    category: "Mobile / Consumer Apps",
-    description: "Başarılı ürün modellerinden esinlenen iOS ve Android uygulamaları.",
-    stack: ["iOS", "Android", "React Native"],
-    label: "APP",
-    labelDetail: "iOS & Android",
-    tone: "cyan",
-  },
-  {
-    id: "automation",
-    index: "06",
-    title: "İŞLETME OTOMASYONU",
-    category: "SMB / Business Automation",
-    description: "Esnafın günlük operasyonlarını sadeleştiren özel otomasyon sistemleri.",
-    stack: ["Stok", "CRM", "Raporlama"],
-    label: "SMB",
-    labelDetail: "İş Yeri Sistemleri",
-    tone: "gold",
   },
 ];
 
@@ -1050,9 +983,13 @@ export default function Home() {
                     <span className="project-category">{project.category}</span>
                     <h3>{project.title}</h3>
                   </div>
-                  <button onClick={() => scrollTo("contact")} aria-label={`${project.title} benzeri proje konuş`}>
+                  <Link
+                    href={`/projeler/${project.id}`}
+                    aria-label={`${project.title} proje detayını incele`}
+                    title="Proje detayını incele"
+                  >
                     <span className="card-arrow" aria-hidden="true">↗</span>
-                  </button>
+                  </Link>
                   <p>{project.description}</p>
                   <div className="tag-row">
                     {project.stack.map((item) => <span key={item}>{item}</span>)}
