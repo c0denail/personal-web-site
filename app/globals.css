@@ -55,6 +55,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-size: 18px;
   overflow-x: hidden;
   transition: background-color 300ms ease, color 300ms ease;
 }
@@ -303,7 +304,7 @@ button {
   margin: 36px 0 18px;
   color: var(--muted);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.01em;
 }
 
@@ -340,7 +341,7 @@ button {
   max-width: 520px;
   margin: 28px 0 0;
   color: var(--muted);
-  font-size: 19px;
+  font-size: 21px;
   line-height: 1.65;
 }
 
@@ -777,7 +778,7 @@ button {
 .about-copy > p {
   margin: 0 0 22px;
   color: var(--muted);
-  font-size: 17px;
+  font-size: 19px;
   line-height: 1.8;
 }
 
@@ -848,13 +849,13 @@ button {
 
 .principle-grid h3 {
   margin: 58px 0 12px;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .principle-grid p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.7;
 }
 
@@ -1250,7 +1251,7 @@ button {
   grid-column: 1 / -1;
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.7;
 }
 
@@ -1323,14 +1324,14 @@ button {
 
 .process-steps h3 {
   margin: 9px 0 7px;
-  font-size: 23px;
+  font-size: 25px;
 }
 
 .process-steps p {
   max-width: 570px;
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.65;
 }
 
@@ -1393,7 +1394,7 @@ button {
 }
 
 .package-category-tabs button strong {
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: -0.01em;
 }
 
@@ -1421,14 +1422,14 @@ button {
 
 .package-category-copy strong {
   align-self: end;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .package-category-copy p {
   align-self: start;
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.55;
 }
 
@@ -1501,7 +1502,7 @@ button {
   min-height: 84px;
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -1543,7 +1544,7 @@ button {
   display: flex;
   gap: 10px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .package-card li span {
@@ -1595,7 +1596,7 @@ button {
 
 .calculator-copy p {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.75;
 }
 
@@ -1630,7 +1631,7 @@ button {
 
 .selected-package > span {
   color: var(--text);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .addon-list {
@@ -1640,6 +1641,7 @@ button {
 
 .addon-list label {
   min-height: 50px;
+  gap: 12px;
   justify-content: flex-start;
   cursor: pointer;
   transition: border-color 180ms ease, background 180ms ease;
@@ -1659,6 +1661,7 @@ button {
 .fake-check {
   width: 20px;
   height: 20px;
+  flex: 0 0 20px;
   display: grid;
   place-items: center;
   border: 1px solid var(--line-strong);
@@ -1674,7 +1677,7 @@ button {
 
 .addon-list label > span:nth-child(3) {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .addon-list strong {
@@ -1758,7 +1761,7 @@ button {
 }
 
 .faq-list button > strong {
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 570;
 }
 
@@ -1783,7 +1786,7 @@ button {
   max-width: 620px;
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.8;
   transition: padding 300ms ease;
 }
@@ -1818,7 +1821,7 @@ button {
 
 .contact-copy .eyebrow {
   margin-top: 50px;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .contact-copy .section-index {
@@ -1833,7 +1836,7 @@ button {
   max-width: 490px;
   margin: 30px 0;
   color: var(--muted);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.75;
 }
 
@@ -1857,7 +1860,7 @@ button {
   border-bottom: 1px solid var(--line-strong);
   background: transparent;
   font-family: var(--font-geist-mono), monospace;
-  font-size: 13px;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -1880,7 +1883,7 @@ button {
 }
 
 .contact-status strong {
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .contact-status small {
@@ -1939,7 +1942,7 @@ button {
   background: transparent;
   color: var(--text);
   font-family: var(--font-geist-sans), Arial, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   letter-spacing: 0;
   transition: border-color 180ms ease;
 }
@@ -1976,7 +1979,7 @@ button {
   max-width: 230px;
   color: var(--faint);
   font-family: var(--font-geist-mono), monospace;
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -2011,7 +2014,7 @@ footer {
 
 .footer-top p {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -2292,7 +2295,7 @@ footer {
 
   .hero-intro {
     min-height: 80px;
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .hero-actions {
