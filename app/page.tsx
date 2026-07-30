@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { FaInstagram, FaLinkedinIn } from "react-icons/fa6";
+import Chatbot from "./components/Chatbot";
 import { projects } from "./data/projects";
 
 const CONTACT_EMAIL = "info@c0denail.com";
@@ -1338,6 +1339,8 @@ export default function Home() {
           <span>v1.0.0</span>
         </div>
       </footer>
+
+      <Chatbot />
 
       {toast && (
         <div className={`toast toast-${toast.status}`} role="status">
