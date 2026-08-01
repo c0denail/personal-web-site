@@ -18,6 +18,10 @@ export function projectHref(locale: Locale, slug: string) {
   return locale === "tr" ? `/projeler/${slug}` : `/en/projects/${slug}`;
 }
 
+export function labHref(locale: Locale) {
+  return locale === "tr" ? "/lab" : "/en/lab";
+}
+
 export function otherLocale(locale: Locale): Locale {
   return locale === "tr" ? "en" : "tr";
 }

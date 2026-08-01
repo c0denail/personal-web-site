@@ -4,10 +4,12 @@ import Link from "next/link";
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { FaInstagram, FaLinkedinIn } from "react-icons/fa6";
 import Chatbot from "./Chatbot";
+import LabCard from "./LabCard";
 import { getHomeContent } from "../data/home-content";
 import { getHomeUi } from "../data/home-ui";
+import { getLabEntries } from "../data/lab";
 import { getProjects } from "../data/projects";
-import { homeHref, localeConfig, otherLocale, projectHref, type Locale } from "../i18n";
+import { homeHref, labHref, localeConfig, otherLocale, projectHref, type Locale } from "../i18n";
 
 const CONTACT_EMAIL = "info@c0denail.com";
 
@@ -36,6 +38,7 @@ export function HomePage({ locale }: { locale: Locale }) {
   const ui = getHomeUi(locale);
   const { services, packageCategories, addOns, faqs } = getHomeContent(locale);
   const projects = getProjects(locale);
+  const labEntries = getLabEntries(locale).slice(0, 3);
   const [theme, setTheme] = useState<Theme>("dark");
   const [menuOpen, setMenuOpen] = useState(false);
   const [typedText, setTypedText] = useState("");
@@ -155,6 +158,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       about: ui.terminal.about,
       services: ui.terminal.services,
       work: ui.terminal.work,
+      lab: ui.terminal.lab,
       pricing: ui.terminal.pricing,
       contact: `${ui.terminal.contact}: ${CONTACT_EMAIL}`,
       theme: ui.terminal.themeChanged(
@@ -172,7 +176,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       ]);
     }
 
-    if (["about", "services", "work", "pricing", "contact"].includes(clean)) {
+    if (["about", "services", "work", "lab", "pricing", "contact"].includes(clean)) {
       scrollTo(clean);
     }
     if (clean === "theme") toggleTheme();
@@ -298,6 +302,7 @@ export function HomePage({ locale }: { locale: Locale }) {
           <button onClick={() => scrollTo("about")}>{ui.nav.about}</button>
           <button onClick={() => scrollTo("services")}>{ui.nav.services}</button>
           <button onClick={() => scrollTo("work")}>{ui.nav.work}</button>
+          <button onClick={() => scrollTo("lab")}>{ui.nav.lab}</button>
           <button onClick={() => scrollTo("pricing")}>{ui.nav.pricing}</button>
         </nav>
 
@@ -617,11 +622,48 @@ export function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      <section
+        className="lab-preview section-block"
+        id="lab"
+        aria-labelledby="lab-preview-title"
+      >
+        <div className="section-shell">
+          <div className="section-heading split-heading lab-preview-heading" data-reveal>
+            <div>
+              <div className="section-index">
+                <span>04</span>
+                <span>{ui.labSection.system}</span>
+              </div>
+              <h2 id="lab-preview-title">{ui.labSection.title}</h2>
+            </div>
+            <div className="lab-preview-intro">
+              <p>{ui.labSection.description}</p>
+              <Link
+                className="lab-preview-link"
+                href={labHref(locale)}
+                hrefLang={locale}
+                aria-label={ui.labSection.aria}
+              >
+                {ui.labSection.viewAll} <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="lab-preview-grid">
+            {labEntries.map((entry) => (
+              <div className="lab-preview-item" data-reveal key={entry.id}>
+                <LabCard entry={entry} locale={locale} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="process section-shell section-block" id="process">
         <div className="section-heading split-heading" data-reveal>
           <div>
             <div className="section-index">
-              <span>04</span>
+              <span>05</span>
               <span>/ PROCESS.LOG</span>
             </div>
             <h2>{ui.process.title}</h2>
@@ -658,7 +700,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         <div className="section-shell">
           <div className="section-heading centered-heading" data-reveal>
             <div className="section-index">
-              <span>05</span>
+              <span>06</span>
               <span>/ PRICING.CONFIG</span>
             </div>
             <h2>{ui.pricing.title1}<br /><span>{ui.pricing.title2}</span></h2>
@@ -773,7 +815,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         <div className="faq-layout">
           <div className="section-heading" data-reveal>
             <div className="section-index">
-              <span>06</span>
+              <span>07</span>
               <span>/ FAQ.MD</span>
             </div>
             <h2>{ui.faqSection.title1}<br />{ui.faqSection.title2}</h2>
@@ -807,7 +849,7 @@ export function HomePage({ locale }: { locale: Locale }) {
         <div className="section-shell contact-layout">
           <div className="contact-copy" data-reveal>
             <div className="section-index">
-              <span>07</span>
+              <span>08</span>
               <span>/ CONNECT.SH</span>
             </div>
             <p className="eyebrow"><span className="prompt">root@future:~$</span> ./start-project</p>
@@ -911,6 +953,7 @@ export function HomePage({ locale }: { locale: Locale }) {
             <button onClick={() => scrollTo("about")}>{ui.footer.about}</button>
             <button onClick={() => scrollTo("services")}>{ui.footer.services}</button>
             <button onClick={() => scrollTo("work")}>{ui.footer.work}</button>
+            <button onClick={() => scrollTo("lab")}>{ui.footer.lab}</button>
             <button onClick={() => scrollTo("contact")}>{ui.footer.contact}</button>
           </div>
           <button className="back-top" onClick={() => scrollTo("home")}>

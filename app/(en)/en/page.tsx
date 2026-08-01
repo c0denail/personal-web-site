@@ -17,11 +17,14 @@ export const metadata: Metadata = {
     description: "Ideas into code, code into products. Design × Code × AI.",
     type: "website",
     locale: "en_US",
+    url: "/en",
+    images: [{ url: "/og.png", width: 1730, height: 909, alt: "c0denail Lab / Technical Journal" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Emirhan Tuncer — Creative Developer",
     description: "Ideas into code, code into products. Design × Code × AI.",
+    images: ["/og.png"],
   },
 };
 
