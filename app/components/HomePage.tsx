@@ -3,8 +3,11 @@
 import Link from "next/link";
 import { FormEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { FaInstagram, FaLinkedinIn } from "react-icons/fa6";
-import Chatbot from "./components/Chatbot";
-import { projects } from "./data/projects";
+import Chatbot from "./Chatbot";
+import { getHomeContent } from "../data/home-content";
+import { getHomeUi } from "../data/home-ui";
+import { getProjects } from "../data/projects";
+import { homeHref, localeConfig, otherLocale, projectHref, type Locale } from "../i18n";
 
 const CONTACT_EMAIL = "info@c0denail.com";
 
@@ -21,412 +24,18 @@ const socialLinks = [
   },
 ];
 
-const services = [
-  {
-    icon: "01",
-    title: "Web deneyimleri",
-    description:
-      "Markanı birkaç saniyede anlatan, hızlı ve dönüşüm odaklı web siteleri.",
-    tags: ["Landing page", "Kurumsal site", "E-ticaret", "SEO"],
-    command: "npm run launch",
-  },
-  {
-    icon: "02",
-    title: "AI Ajanları & otomasyon",
-    description:
-      "İş süreçlerini anlayan, karar alan ve ekibinle birlikte çalışan akıllı sistemler.",
-    tags: ["AI ajanları", "LLM", "Workflow", "API"],
-    command: "python agent.py --deploy",
-  },
-  {
-    icon: "03",
-    title: "Oyun geliştirme",
-    description:
-      "Fikirden oynanabilir prototipe, güçlü mekaniklere sahip etkileşimli oyun deneyimleri.",
-    tags: ["Web oyunları", "2D / 3D", "Multiplayer", "Prototip"],
-    command: "npm run playtest",
-  },
-  {
-    icon: "04",
-    title: "Mobil uygulama",
-    description:
-      "iOS ve Android için hızlı, akıcı ve kullanıcıların tekrar dönmek isteyeceği uygulamalar.",
-    tags: ["iOS", "Android", "React Native", "App Store"],
-    command: "npx expo start",
-  },
-];
-
-const packageCategories = [
-  {
-    id: "finance",
-    name: "Finans Sistemleri",
-    description: "Finansal veriyi anlaşılır, güvenli ve işlem yapılabilir ürünlere dönüştüren paketler.",
-    packages: [
-      {
-        id: "finance-start",
-        level: "start",
-        name: "Finans Başlangıç",
-        price: 39000,
-        note: "Temel finans verilerini tek ekranda izlemek isteyen ürünler için hızlı başlangıç.",
-        includes: [
-          "Keşif çalışması ve finansal veri modeli",
-          "Güvenli giriş ve kullanıcı hesabı",
-          "Gelir, gider veya portföy dashboard’u",
-          "Manuel veri girişi ve CSV içe aktarma",
-          "Mobil uyumlu temel arayüz",
-          "Yayın kurulumu ve 2 revizyon",
-        ],
-        duration: "2–4 hafta",
-      },
-      {
-        id: "finance-product",
-        level: "product",
-        name: "Finans Ürün",
-        price: 69000,
-        note: "Canlı veriler ve gelişmiş raporlarla kullanıma hazır finansal ürün MVP’si.",
-        includes: [
-          "Başlangıç paketindeki tüm özellikler",
-          "Banka, piyasa veya özel API bağlantısı",
-          "Canlı grafikler ve karşılaştırmalı analiz",
-          "Yönetici, ekip ve müşteri rolleri",
-          "PDF / Excel raporlama ve dışa aktarma",
-          "Bildirimler, testler ve 14 gün destek",
-        ],
-        duration: "4–7 hafta",
-        featured: true,
-      },
-      {
-        id: "finance-scale",
-        level: "scale",
-        name: "Finans Ölçek",
-        price: 109000,
-        note: "Birden fazla kullanıcı grubuna hizmet veren ölçeklenebilir finans platformu.",
-        includes: [
-          "Ürün stratejisi ve teknik mimari",
-          "Çoklu şirket / müşteri yapısı",
-          "Özel işlem ve onay akışları",
-          "Gelişmiş analiz, risk ve performans ekranları",
-          "Yönetim paneli, audit log ve güvenlik katmanı",
-          "Yük testi, yayın planı ve 30 gün destek",
-        ],
-        duration: "7–10 hafta",
-      },
-    ],
-  },
-  {
-    id: "agents",
-    name: "AI Ajanları",
-    description: "Tek görevli yardımcıdan çok araçlı operasyon ajanlarına kadar iş akışına özel çözümler.",
-    packages: [
-      {
-        id: "agents-start",
-        level: "start",
-        name: "Ajan Başlangıç",
-        price: 29000,
-        note: "Tek bir iş problemini çözen, kontrollü ve ölçülebilir AI ajanı.",
-        includes: [
-          "Kullanım senaryosu ve başarı kriterleri",
-          "Tek görevli özel AI ajanı",
-          "Prompt ve sistem davranışı tasarımı",
-          "1 araç veya API entegrasyonu",
-          "Temel hata kontrolü ve test senaryoları",
-          "Kurulum dokümanı ve 2 revizyon",
-        ],
-        duration: "2–3 hafta",
-      },
-      {
-        id: "agents-product",
-        level: "product",
-        name: "Workflow Ajanı",
-        price: 49000,
-        note: "Birden fazla adımı ve aracı yöneten, ekip onaylı üretim ajanı.",
-        includes: [
-          "Çok adımlı görev ve karar akışı",
-          "3 adede kadar araç / API entegrasyonu",
-          "Doküman ve bilgi tabanı bağlantısı",
-          "İnsan onayı ve geri bildirim noktaları",
-          "Çalışma geçmişi ve yönetim ekranı",
-          "Değerlendirme raporu ve 14 gün destek",
-        ],
-        duration: "3–5 hafta",
-        featured: true,
-      },
-      {
-        id: "agents-scale",
-        level: "scale",
-        name: "Ajan Platformu",
-        price: 89000,
-        note: "Birden fazla ajanı, kullanıcıyı ve iş sürecini tek merkezden yöneten sistem.",
-        includes: [
-          "Çoklu ajan mimarisi ve görev dağıtımı",
-          "Rol bazlı kullanıcı ve yetki sistemi",
-          "CRM, e-posta ve operasyon bağlantıları",
-          "Kalıcı hafıza ve kurumsal bilgi katmanı",
-          "Guardrail, değerlendirme ve maliyet takibi",
-          "Canlıya geçiş planı ve 30 gün destek",
-        ],
-        duration: "6–9 hafta",
-      },
-    ],
-  },
-  {
-    id: "games",
-    name: "Açık Dünya Oyunları",
-    description: "Fikir doğrulamadan yatırımcıya veya yayıncıya sunulabilir oynanabilir sürüme kadar.",
-    packages: [
-      {
-        id: "games-start",
-        level: "start",
-        name: "Oynanabilir Konsept",
-        price: 39000,
-        note: "Oyunun temel fikrini ve eğlence potansiyelini test eden kompakt demo.",
-        includes: [
-          "Oyun fikri ve ana döngü tasarımı",
-          "Tek oynanabilir alan / bölüm",
-          "Karakter hareketi ve kamera sistemi",
-          "Temel etkileşim ve görev prototipi",
-          "Geçici UI ve oyun içi yönlendirme",
-          "Masaüstü veya web demo teslimi",
-        ],
-        duration: "3–5 hafta",
-      },
-      {
-        id: "games-product",
-        level: "product",
-        name: "Dünya Prototipi",
-        price: 74000,
-        note: "Keşif, görev ve ilerleme sistemlerini birleştiren kapsamlı oyun prototipi.",
-        includes: [
-          "Harita, bölge ve biyom prototipi",
-          "Envanter, görev ve ilerleme sistemi",
-          "NPC davranışları ve temel düşman AI’ı",
-          "Kayıt / yükleme ve kontrol ayarları",
-          "Performans optimizasyonunun ilk aşaması",
-          "2 playtest sürümü ve sonuç raporu",
-        ],
-        duration: "5–8 hafta",
-        featured: true,
-      },
-      {
-        id: "games-scale",
-        level: "scale",
-        name: "Vertical Slice",
-        price: 119000,
-        note: "Oyunun nihai kalitesini temsil eden, sunuma hazır cilalı üretim dilimi.",
-        includes: [
-          "Görsel yön ve üretim standardı",
-          "Cilalı açık dünya bölgesi",
-          "Savaş, görev ve karakter gelişimi",
-          "Özgün UI, ses ve geri bildirim katmanı",
-          "Hedef cihazlarda performans çalışması",
-          "Yayıncı sunumu ve üretim yol haritası",
-        ],
-        duration: "8–12 hafta",
-      },
-    ],
-  },
-  {
-    id: "web",
-    name: "Web & E-Ticaret",
-    description: "Marka sitesinden satış ve büyüme altyapısına kadar hızlı, yönetilebilir web ürünleri.",
-    packages: [
-      {
-        id: "web-start",
-        level: "start",
-        name: "Launch Site",
-        price: 24000,
-        note: "Markanı net anlatan, hızlı açılan ve yayına hazır profesyonel web sitesi.",
-        includes: [
-          "1–5 sayfa özel arayüz tasarımı",
-          "Mobil, tablet ve masaüstü uyumu",
-          "İletişim formu ve temel entegrasyonlar",
-          "Teknik SEO ve performans ayarları",
-          "Analytics ve arama motoru kurulumu",
-          "Yayın, alan adı bağlantısı ve 2 revizyon",
-        ],
-        duration: "2–3 hafta",
-      },
-      {
-        id: "web-product",
-        level: "product",
-        name: "Commerce Pro",
-        price: 35000,
-        note: "Ürünlerini yönetip güvenli biçimde satış yapabileceğin e-ticaret sistemi.",
-        includes: [
-          "Özel mağaza ve ürün sayfası tasarımı",
-          "Ürün, kategori ve stok yönetimi",
-          "Sepet, ödeme ve sipariş akışları",
-          "Yönetim paneli veya CMS bağlantısı",
-          "E-posta bildirimleri ve temel raporlar",
-          "SEO, hız optimizasyonu ve 14 gün destek",
-        ],
-        duration: "3–5 hafta",
-        featured: true,
-      },
-      {
-        id: "web-scale",
-        level: "scale",
-        name: "Growth Platform",
-        price: 69000,
-        note: "İçerik, satış ve otomasyonu tek altyapıda buluşturan büyüme platformu.",
-        includes: [
-          "Çok dilli ve çok bölgeli yapı",
-          "Gelişmiş filtre, arama ve ürün varyantları",
-          "CRM, pazarlama ve muhasebe bağlantıları",
-          "Blog, kampanya ve landing page sistemi",
-          "Dönüşüm analitiği ve A/B test altyapısı",
-          "Ekip eğitimi, yayın planı ve 30 gün destek",
-        ],
-        duration: "6–9 hafta",
-      },
-    ],
-  },
-  {
-    id: "mobile",
-    name: "Mobil Uygulamalar",
-    description: "Fikir prototipinden mağazalarda yayınlanabilir iOS ve Android ürünlerine kadar.",
-    packages: [
-      {
-        id: "mobile-start",
-        level: "start",
-        name: "Mobil Prototip",
-        price: 39000,
-        note: "Ana fikri gerçek cihazda test etmeyi sağlayan işlevsel mobil prototip.",
-        includes: [
-          "Kullanıcı akışları ve ekran planı",
-          "5 temel ekranın özel tasarımı",
-          "React Native uygulama altyapısı",
-          "Yerel veri ve temel etkileşimler",
-          "Android ve iOS test sürümleri",
-          "Demo teslimi ve 2 revizyon",
-        ],
-        duration: "3–4 hafta",
-      },
-      {
-        id: "mobile-product",
-        level: "product",
-        name: "Mobil MVP",
-        price: 64000,
-        note: "Gerçek kullanıcılarla yayına çıkabilecek temel özelliklere sahip mobil ürün.",
-        includes: [
-          "iOS ve Android üretim uygulaması",
-          "Kayıt, giriş ve kullanıcı profili",
-          "API, veritabanı ve bulut bağlantısı",
-          "Push bildirimleri ve temel yönetim ekranı",
-          "Analitik ve hata izleme kurulumu",
-          "App Store / Google Play yayın hazırlığı",
-        ],
-        duration: "5–8 hafta",
-        featured: true,
-      },
-      {
-        id: "mobile-scale",
-        level: "scale",
-        name: "Mobil Ölçek",
-        price: 109000,
-        note: "Gelir modeli, gelişmiş modüller ve operasyon araçlarıyla ölçeklenebilir uygulama.",
-        includes: [
-          "Gelişmiş kullanıcı ve içerik modülleri",
-          "Abonelik, ödeme veya üyelik sistemi",
-          "Çevrimdışı kullanım ve veri senkronizasyonu",
-          "Gelişmiş analitik ve crash monitoring",
-          "CI/CD ve mağaza sürüm yönetimi",
-          "Performans testi ve 30 gün destek",
-        ],
-        duration: "8–12 hafta",
-      },
-    ],
-  },
-  {
-    id: "automation",
-    name: "İşletme Otomasyonu",
-    description: "Tek bir tekrarlı görevden bütün operasyonu yöneten akıllı işletme sistemine kadar.",
-    packages: [
-      {
-        id: "automation-start",
-        level: "start",
-        name: "Süreç Başlangıç",
-        price: 29000,
-        note: "Zaman kaybettiren tek bir iş akışını otomatikleştiren sade çözüm.",
-        includes: [
-          "Süreç analizi ve darboğaz haritası",
-          "Tek ana otomasyon akışı",
-          "1 harici servis entegrasyonu",
-          "Basit takip ve durum paneli",
-          "E-posta / mesaj bildirimleri",
-          "Kurulum dokümanı ve ekip anlatımı",
-        ],
-        duration: "2–3 hafta",
-      },
-      {
-        id: "automation-product",
-        level: "product",
-        name: "Operasyon Merkezi",
-        price: 44000,
-        note: "Müşteri, stok, görev ve raporlamayı tek panelde birleştiren işletme sistemi.",
-        includes: [
-          "CRM, stok veya görevden 3 ana modül",
-          "Kullanıcı rolleri ve ekip yetkileri",
-          "Canlı operasyon ve raporlama paneli",
-          "3 adede kadar servis entegrasyonu",
-          "Excel içe / dışa aktarma ve bildirimler",
-          "Veri aktarımı, eğitim ve 14 gün destek",
-        ],
-        duration: "4–6 hafta",
-        featured: true,
-      },
-      {
-        id: "automation-scale",
-        level: "scale",
-        name: "Akıllı Operasyon",
-        price: 79000,
-        note: "Departmanlar arası süreçleri ve karar noktalarını uçtan uca yöneten platform.",
-        includes: [
-          "Uçtan uca çok departmanlı iş akışları",
-          "AI destekli belge ve talep işleme",
-          "Gelişmiş raporlar ve yönetici ekranları",
-          "Onay mekanizmaları ve audit log",
-          "Yedekleme, güvenlik ve hata senaryoları",
-          "Canlıya geçiş planı ve 30 gün destek",
-        ],
-        duration: "6–9 hafta",
-      },
-    ],
-  },
-];
-
-const addOns = [
-  { id: "brand", label: "Marka yönü", price: 15000 },
-  { id: "copy", label: "İçerik & metin", price: 10000 },
-  { id: "speed", label: "Öncelikli teslim", price: 20000 },
-];
-
-const faqs = [
-  {
-    q: "Süreç nasıl başlıyor?",
-    a: "Kısa bir tanışma görüşmesinde hedefi, kapsamı ve başarı ölçütlerini netleştiriyoruz. Ardından sana net teslimleri, takvimi ve bütçeyi içeren bir proje planı gönderiyorum.",
-  },
-  {
-    q: "Hazır tema mı kullanıyorsun?",
-    a: "Hayır. Her proje ihtiyaca göre tasarlanıyor. Gereksiz yere sıfırdan altyapı yazmak yerine güvenilir teknolojileri, markana özel deneyimle birleştiriyorum.",
-  },
-  {
-    q: "Yayın sonrası destek var mı?",
-    a: "Evet. Teslim sonrası hata düzeltme dönemi her pakete dahil. Sürekli geliştirme ve bakım için aylık destek modeli de oluşturabiliriz.",
-  },
-  {
-    q: "Bütçem paketlere uymuyorsa?",
-    a: "Paketler başlangıç noktasıdır. Öncelikleri birlikte sıralayıp hedefi koruyan daha küçük bir ilk sürüm planlayabiliriz.",
-  },
-];
 
 type Theme = "dark" | "light";
 
-function formatMoney(value: number) {
-  return new Intl.NumberFormat("tr-TR").format(value) + " ₺";
+function formatMoney(value: number, locale: Locale) {
+  const formatted = new Intl.NumberFormat(localeConfig[locale].numberLocale).format(value);
+  return locale === "en" ? `₺${formatted}` : `${formatted} ₺`;
 }
 
-export default function Home() {
+export function HomePage({ locale }: { locale: Locale }) {
+  const ui = getHomeUi(locale);
+  const { services, packageCategories, addOns, faqs } = getHomeContent(locale);
+  const projects = getProjects(locale);
   const [theme, setTheme] = useState<Theme>("dark");
   const [menuOpen, setMenuOpen] = useState(false);
   const [typedText, setTypedText] = useState("");
@@ -434,12 +43,12 @@ export default function Home() {
   const [deleting, setDeleting] = useState(false);
   const [command, setCommand] = useState("");
   const [terminalLines, setTerminalLines] = useState<string[]>([
-    "Bağlantı güvenli. Kullanılabilir komutlar için “help” yaz.",
+    ui.terminal.initial,
   ]);
   const [activeCategory, setActiveCategory] = useState("web");
   const [activePackage, setActivePackage] = useState("web-product");
   const [activeAddOns, setActiveAddOns] = useState<string[]>([]);
-  const [selectedService, setSelectedService] = useState("Web deneyimleri");
+  const [selectedService, setSelectedService] = useState<string>(ui.contact.services[0]);
   const [openFaq, setOpenFaq] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState<{
@@ -448,8 +57,8 @@ export default function Home() {
   } | null>(null);
   const commandRef = useRef<HTMLInputElement>(null);
   const words = useMemo(
-    () => ["web deneyimleri.", "AI ajanları.", "oyunlar.", "mobil uygulamalar."],
-    [],
+    () => [...ui.typedWords],
+    [ui.typedWords],
   );
 
   useEffect(() => {
@@ -458,8 +67,9 @@ export default function Home() {
       ? "light"
       : "dark";
     const nextTheme = saved || preferred;
-    setTheme(nextTheme);
     document.documentElement.dataset.theme = nextTheme;
+    const frame = window.requestAnimationFrame(() => setTheme(nextTheme));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -541,13 +151,15 @@ export default function Home() {
     const clean = command.trim().toLowerCase();
     if (!clean) return;
     const output: Record<string, string> = {
-      help: "Komutlar: about, services, work, pricing, contact, theme, clear",
-      about: "Emirhan; fikirleri çalışan, hissedilen dijital ürünlere dönüştürür.",
-      services: "Web deneyimleri · AI ajanları & otomasyon · Oyun geliştirme · Mobil uygulama",
-      work: "Finans · AI ajanları · Oyun · Web · Mobil · Otomasyon — vitrine ışınlanıyor…",
-      pricing: "6 kategori · 18 paket · 24K’dan başlayan proje seçenekleri",
-      contact: `Bağlantı kanalı: ${CONTACT_EMAIL}`,
-      theme: `Tema ${theme === "dark" ? "aydınlık" : "karanlık"} moda geçirildi.`,
+      help: ui.terminal.help,
+      about: ui.terminal.about,
+      services: ui.terminal.services,
+      work: ui.terminal.work,
+      pricing: ui.terminal.pricing,
+      contact: `${ui.terminal.contact}: ${CONTACT_EMAIL}`,
+      theme: ui.terminal.themeChanged(
+        theme === "dark" ? ui.terminal.light : ui.terminal.dark,
+      ),
     };
 
     if (clean === "clear") {
@@ -556,7 +168,7 @@ export default function Home() {
       setTerminalLines((lines) => [
         ...lines.slice(-3),
         `$ ${clean}`,
-        output[clean] || `Komut bulunamadı: ${clean}. “help” deneyebilirsin.`,
+        output[clean] || ui.terminal.notFound(clean),
       ]);
     }
 
@@ -620,7 +232,7 @@ export default function Home() {
 
   const requestOffer = () => {
     setSelectedService(
-      `${selectedCategory.name} — ${chosenPackage.name} — ${formatMoney(total)}`,
+      `${selectedCategory.name} — ${chosenPackage.name} — ${formatMoney(total, locale)}`,
     );
     scrollTo("contact");
   };
@@ -629,6 +241,7 @@ export default function Home() {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
+    formData.set("locale", locale);
 
     setIsSubmitting(true);
     setToast(null);
@@ -642,18 +255,18 @@ export default function Home() {
       const result = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(result.message || "Mesaj gönderilemedi.");
+        throw new Error(result.message || ui.contact.error);
       }
 
       form.reset();
-      setSelectedService("Web deneyimleri");
+      setSelectedService(ui.contact.services[0]);
       setToast({
-        message: "Talebin ulaştı. En kısa sürede dönüş yapacağım.",
+        message: ui.contact.success,
         status: "success",
       });
     } catch (error) {
       setToast({
-        message: error instanceof Error ? error.message : "Mesaj gönderilemedi.",
+        message: error instanceof Error ? error.message : ui.contact.error,
         status: "error",
       });
     } finally {
@@ -664,32 +277,32 @@ export default function Home() {
 
   const copyEmail = async () => {
     await navigator.clipboard.writeText(CONTACT_EMAIL);
-    setToast({ message: "E-posta adresi kopyalandı.", status: "success" });
+    setToast({ message: ui.contact.copied, status: "success" });
     window.setTimeout(() => setToast(null), 2400);
   };
 
   return (
-    <main>
+    <main lang={locale}>
       <div className="scroll-progress" aria-hidden="true" />
       <div className="pointer-glow" aria-hidden="true" />
       <div className="noise" aria-hidden="true" />
 
       <header className="site-header">
-        <a className="brand" href="#home" aria-label="c0denail ana sayfa">
+        <a className="brand" href="#home" aria-label={ui.brandHome}>
           <span className="brand-mark">&gt;_</span>
           <span>c0denail</span>
           <span className="brand-cursor">▋</span>
         </a>
 
-        <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Ana menü">
-          <button onClick={() => scrollTo("about")}>./hakkımda</button>
-          <button onClick={() => scrollTo("services")}>./hizmetler</button>
-          <button onClick={() => scrollTo("work")}>./işler</button>
-          <button onClick={() => scrollTo("pricing")}>./paketler</button>
+        <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label={ui.mainNavigation}>
+          <button onClick={() => scrollTo("about")}>{ui.nav.about}</button>
+          <button onClick={() => scrollTo("services")}>{ui.nav.services}</button>
+          <button onClick={() => scrollTo("work")}>{ui.nav.work}</button>
+          <button onClick={() => scrollTo("pricing")}>{ui.nav.pricing}</button>
         </nav>
 
         <div className="header-actions">
-          <div className="header-socials" aria-label="Sosyal medya bağlantıları">
+          <div className="header-socials" aria-label={ui.socialNavigation}>
             {socialLinks.map(({ label, href, Icon }) => (
               <a
                 key={label}
@@ -697,24 +310,35 @@ export default function Home() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`${label} profilini yeni sekmede aç`}
+                aria-label={ui.openSocial(label)}
                 title={label}
               >
                 <Icon aria-hidden="true" focusable="false" />
               </a>
             ))}
           </div>
-          <button className="theme-toggle" onClick={toggleTheme} aria-label="Temayı değiştir">
+          <Link
+            className="language-switch"
+            href={homeHref(otherLocale(locale))}
+            hrefLang={otherLocale(locale)}
+            aria-label={ui.switchLanguage}
+            title={ui.switchLanguage}
+          >
+            <span className={locale === "tr" ? "active" : ""}>TR</span>
+            <i aria-hidden="true">/</i>
+            <span className={locale === "en" ? "active" : ""}>EN</span>
+          </Link>
+          <button className="theme-toggle" onClick={toggleTheme} aria-label={ui.changeTheme}>
             <span className="theme-icon">{theme === "dark" ? "☼" : "◐"}</span>
             <span>{theme === "dark" ? "LIGHT" : "DARK"}</span>
           </button>
           <button className="header-cta" onClick={() => scrollTo("contact")}>
-            Projeyi başlat <span>↗</span>
+            {ui.startProject} <span>↗</span>
           </button>
           <button
             className="menu-toggle"
             onClick={() => setMenuOpen((open) => !open)}
-            aria-label="Menüyü aç veya kapat"
+            aria-label={ui.toggleMenu}
             aria-expanded={menuOpen}
           >
             <span />
@@ -730,12 +354,12 @@ export default function Home() {
             <span className="prompt">emirhan@c0denail:~$</span> create --future
           </p>
           <h1>
-            Fikri <span className="outline-word">koda,</span>
+            {ui.hero.line1Start}<span className="outline-word">{ui.hero.line1Accent}</span>
             <br />
-            kodu <span className="accent-word">ürüne.</span>
+            {ui.hero.line2Start}<span className="accent-word">{ui.hero.line2Accent}</span>
           </h1>
           <p className="hero-intro">
-            Markaların ve girişimlerin büyümesine yardım eden{" "}
+            {ui.hero.intro}{" "}
             <span className="typed-wrap">
               {typedText}
               <span className="type-caret">▋</span>
@@ -744,27 +368,27 @@ export default function Home() {
 
           <div className="hero-actions">
             <button className="primary-button" onClick={() => scrollTo("contact")}>
-              <span>Birlikte üretelim</span>
+              <span>{ui.hero.primary}</span>
               <span className="button-arrow">↗</span>
             </button>
             <button className="text-button" onClick={() => scrollTo("work")}>
               <span className="play-icon">▶</span>
-              İşleri keşfet
+              {ui.hero.secondary}
             </button>
           </div>
 
           <div className="hero-meta">
             <div>
-              <span className="meta-label">LOKASYON</span>
-              <strong>İstanbul, TR</strong>
+              <span className="meta-label">{ui.hero.locationLabel}</span>
+              <strong>{ui.hero.location}</strong>
             </div>
             <div>
-              <span className="meta-label">ÇALIŞMA MODELİ</span>
-              <strong>Remote / Worldwide</strong>
+              <span className="meta-label">{ui.hero.workModelLabel}</span>
+              <strong>{ui.hero.workModel}</strong>
             </div>
             <div>
-              <span className="meta-label">ODAK</span>
-              <strong>Design × Code × AI</strong>
+              <span className="meta-label">{ui.hero.focusLabel}</span>
+              <strong>{ui.hero.focus}</strong>
             </div>
           </div>
         </div>
@@ -821,24 +445,24 @@ export default function Home() {
                   onChange={(event) => setCommand(event.target.value)}
                   placeholder="help"
                   autoComplete="off"
-                  aria-label="Terminal komutu"
+                  aria-label={ui.terminal.inputLabel}
                 />
               </form>
             </div>
           </div>
           <div className="console-caption">
-            <span>TIP: terminale “help” yaz</span>
+            <span>{ui.terminal.tip}</span>
             <span>⌘ K</span>
           </div>
         </div>
 
-        <button className="scroll-cue" onClick={() => scrollTo("about")} aria-label="Aşağı kaydır">
+        <button className="scroll-cue" onClick={() => scrollTo("about")} aria-label={ui.hero.scroll}>
           <span>SCROLL TO EXPLORE</span>
           <i>↓</i>
         </button>
       </section>
 
-      <section className="marquee" aria-label="Uzmanlık alanları">
+      <section className="marquee" aria-label={ui.hero.marquee}>
         <div className="marquee-track">
           {[0, 1].map((group) => (
             <div className="marquee-group" key={group}>
@@ -854,26 +478,22 @@ export default function Home() {
       <section className="about section-shell section-block" id="about">
         <div className="section-index" data-reveal>
           <span>01</span>
-          <span>/ SİSTEM.HAKKIMDA</span>
+          <span>{ui.about.system}</span>
         </div>
         <div className="about-layout">
           <div className="about-statement" data-reveal>
             <p className="eyebrow"><span className="prompt">&gt;</span> cat philosophy.txt</p>
             <h2>
-              Sadece çalışan değil,
+              {ui.about.heading1}
               <br />
-              <span>iz bırakan</span> ürünler.
+              <span>{ui.about.headingAccent}</span>{ui.about.heading2}
             </h2>
           </div>
           <div className="about-copy" data-reveal>
             <p>
-              Merhaba, ben <strong>Emirhan.</strong> Tasarım hassasiyetini mühendislik
-              disipliniyle birleştiren bir yazılımcıyım.
+              {ui.about.introBefore}<strong>{ui.about.introName}</strong>{ui.about.introAfter}
             </p>
-            <p>
-              Kodu yalnızca bir araç olarak görüyorum. Asıl işim; problemi doğru anlamak,
-              karmaşayı sadeleştirmek ve kullanıcıyla marka arasında akılda kalan bir bağ kurmak.
-            </p>
+            <p>{ui.about.body}</p>
             <div className="about-signature">
               <span>c0denail</span>
               <div>
@@ -884,26 +504,13 @@ export default function Home() {
           </div>
         </div>
         <div className="principle-grid">
-          <article data-reveal>
-            <span>01.</span>
-            <h3>Net düşün</h3>
-            <p>Önce doğru problemi bulur, sonra en sade çözümü tasarlarız.</p>
-          </article>
-          <article data-reveal>
-            <span>02.</span>
-            <h3>İyi hissettir</h3>
-            <p>Her hareket, her boşluk ve her kelime deneyimin bir parçasıdır.</p>
-          </article>
-          <article data-reveal>
-            <span>03.</span>
-            <h3>Sağlam inşa et</h3>
-            <p>Hızlı açılan, erişilebilir ve büyümeye hazır sistemler geliştiririm.</p>
-          </article>
-          <article data-reveal>
-            <span>04.</span>
-            <h3>Gerçek değer üret</h3>
-            <p>Başarıyı süslü ekranlarla değil, iş sonucuyla ölçerim.</p>
-          </article>
+          {ui.about.principles.map((principle, index) => (
+            <article data-reveal key={principle.title}>
+              <span>{String(index + 1).padStart(2, "0")}.</span>
+              <h3>{principle.title}</h3>
+              <p>{principle.description}</p>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -913,8 +520,8 @@ export default function Home() {
             <span>02</span>
             <span>/ SERVICES.JSON</span>
           </div>
-          <h2>Ne inşa edebiliriz?</h2>
-          <p>Stratejiden yayına, ihtiyacın olan uçtan uca dijital üretim.</p>
+          <h2>{ui.servicesSection.title}</h2>
+          <p>{ui.servicesSection.description}</p>
         </div>
 
         <div className="service-list">
@@ -949,9 +556,9 @@ export default function Home() {
                 <span>03</span>
                 <span>/ WORK.INDEX</span>
               </div>
-              <h2>Seçilmiş işler</h2>
+              <h2>{ui.work.title}</h2>
             </div>
-            <p>Finanstan oyun geliştirmeye uzanan seçili ürün ve sistem çalışmaları.</p>
+            <p>{ui.work.description}</p>
           </div>
 
           <div className="project-grid">
@@ -985,9 +592,10 @@ export default function Home() {
                     <h3>{project.title}</h3>
                   </div>
                   <Link
-                    href={`/projeler/${project.id}`}
-                    aria-label={`${project.title} proje detayını incele`}
-                    title="Proje detayını incele"
+                    href={projectHref(locale, project.id)}
+                    hrefLang={locale}
+                    aria-label={ui.work.projectAria(project.title)}
+                    title={ui.work.projectTitle}
                   >
                     <span className="card-arrow" aria-hidden="true">↗</span>
                   </Link>
@@ -1001,9 +609,9 @@ export default function Home() {
           </div>
 
           <div className="work-footer" data-reveal>
-            <span>Yeni bir ürün mü planlıyorsun?</span>
+            <span>{ui.work.footer}</span>
             <button className="text-link" onClick={() => scrollTo("contact")}>
-              Projeni konuşalım <span>→</span>
+              {ui.work.cta} <span>→</span>
             </button>
           </div>
         </div>
@@ -1016,9 +624,9 @@ export default function Home() {
               <span>04</span>
               <span>/ PROCESS.LOG</span>
             </div>
-            <h2>Fikirden yayına.</h2>
+            <h2>{ui.process.title}</h2>
           </div>
-          <p>Şeffaf, odaklı ve sürprizsiz bir üretim süreci.</p>
+          <p>{ui.process.description}</p>
         </div>
 
         <div className="process-terminal" data-reveal>
@@ -1028,19 +636,14 @@ export default function Home() {
             <span>READ ONLY</span>
           </div>
           <div className="process-steps">
-            {[
-              ["01", "Keşif", "Hedefi, kullanıcıyı ve başarı ölçütünü birlikte netleştiririz.", "1–2 gün"],
-              ["02", "Yön", "Bilgi mimarisi, görsel dil ve teknik yaklaşım tek sistemde buluşur.", "3–5 gün"],
-              ["03", "Üretim", "Kısa döngülerle tasarlar, geliştirir ve düzenli olarak paylaşırım.", "2–5 hafta"],
-              ["04", "Yayın", "Son kontroller, performans ayarları ve pürüzsüz teslim.", "1–2 gün"],
-            ].map((step, index) => (
+            {ui.process.steps.map((step, index) => (
               <article key={step[0]}>
                 <div className="process-marker">
                   <span>{step[0]}</span>
                   {index < 3 && <i />}
                 </div>
                 <div>
-                  <span className="process-command">$ step --{step[1].toLocaleLowerCase("tr-TR")}</span>
+                  <span className="process-command">$ step --{step[1].toLocaleLowerCase(localeConfig[locale].numberLocale)}</span>
                   <h3>{step[1]}</h3>
                   <p>{step[2]}</p>
                 </div>
@@ -1058,14 +661,14 @@ export default function Home() {
               <span>05</span>
               <span>/ PRICING.CONFIG</span>
             </div>
-            <h2>Ürününe özel,<br /><span>net başlangıçlar.</span></h2>
-            <p>Önce ürün kategorini, ardından ihtiyacına uygun paket seviyesini seç.</p>
+            <h2>{ui.pricing.title1}<br /><span>{ui.pricing.title2}</span></h2>
+            <p>{ui.pricing.description}</p>
           </div>
 
           <div
             className="package-category-tabs"
             role="group"
-            aria-label="Paket kategorileri"
+            aria-label={ui.pricing.categoriesAria}
             data-reveal
           >
             {packageCategories.map((category, index) => (
@@ -1085,7 +688,7 @@ export default function Home() {
           </div>
 
           <div className="package-category-copy" aria-live="polite">
-            <span>SEÇİLİ KATEGORİ</span>
+            <span>{ui.pricing.selectedCategory}</span>
             <strong>{selectedCategory.name}</strong>
             <p>{selectedCategory.description}</p>
           </div>
@@ -1099,7 +702,7 @@ export default function Home() {
                 key={pack.id}
                 className={`package-card ${pack.featured ? "featured" : ""} ${activePackage === pack.id ? "active" : ""}`}
               >
-                {pack.featured && <span className="popular-badge">KATEGORİNİN ÖNERİLEN PAKETİ</span>}
+                {pack.featured && <span className="popular-badge">{ui.pricing.recommended}</span>}
                 <div className="package-head">
                   <span>/{selectedCategory.id}/{pack.level}</span>
                   <span>{pack.duration}</span>
@@ -1107,8 +710,8 @@ export default function Home() {
                 <h3>{pack.name}</h3>
                 <p>{pack.note}</p>
                 <div className="price">
-                  <small>başlangıç</small>
-                  <strong>{formatMoney(pack.price)}</strong>
+                  <small>{ui.pricing.starting}</small>
+                  <strong>{formatMoney(pack.price, locale)}</strong>
                   <span>+</span>
                 </div>
                 <ul>
@@ -1117,7 +720,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <button onClick={() => choosePackage(pack.id)}>
-                  {activePackage === pack.id ? "Seçildi" : "Bu paketi seç"} <span>→</span>
+                  {activePackage === pack.id ? ui.pricing.selected : ui.pricing.select} <span>→</span>
                 </button>
               </article>
             ))}
@@ -1126,16 +729,16 @@ export default function Home() {
           <div className="quote-calculator" id="calculator" data-reveal>
             <div className="calculator-copy">
               <span className="eyebrow"><span className="prompt">&gt;</span> quick_quote --interactive</span>
-              <h3>Teklifini yapılandır</h3>
-              <p>Seçtiğin pakete ek modüller ekle; tahmini proje başlangıcı anında güncellensin.</p>
+              <h3>{ui.pricing.quoteTitle}</h3>
+              <p>{ui.pricing.quoteDescription}</p>
             </div>
             <div className="calculator-controls">
               <div className="selected-package">
                 <div>
-                  <span>SEÇİLEN PAKET</span>
+                  <span>{ui.pricing.selectedPackage}</span>
                   <strong>{selectedCategory.name} / {chosenPackage.name}</strong>
                 </div>
-                <span>{formatMoney(chosenPackage.price)}</span>
+                <span>{formatMoney(chosenPackage.price, locale)}</span>
               </div>
               <div className="addon-list">
                 {addOns.map((item) => (
@@ -1147,20 +750,20 @@ export default function Home() {
                     />
                     <span className="fake-check">✓</span>
                     <span>{item.label}</span>
-                    <strong>+{formatMoney(item.price)}</strong>
+                    <strong>+{formatMoney(item.price, locale)}</strong>
                   </label>
                 ))}
               </div>
               <div className="calculator-total">
                 <div>
-                  <span>TAHMİNİ PROJE BAŞLANGICI</span>
-                  <strong>{formatMoney(total)}</strong>
+                  <span>{ui.pricing.estimated}</span>
+                  <strong>{formatMoney(total, locale)}</strong>
                 </div>
                 <button className="primary-button" onClick={requestOffer}>
-                  Teklif iste <span>↗</span>
+                  {ui.pricing.request} <span>↗</span>
                 </button>
               </div>
-              <small>* Nihai bütçe, keşif görüşmesinden sonra kapsam ve takvime göre netleşir.</small>
+              <small>{ui.pricing.disclaimer}</small>
             </div>
           </div>
         </div>
@@ -1173,10 +776,10 @@ export default function Home() {
               <span>06</span>
               <span>/ FAQ.MD</span>
             </div>
-            <h2>Merak<br />ettiklerin.</h2>
-            <p>Başka bir sorun varsa terminalin diğer ucundayım.</p>
+            <h2>{ui.faqSection.title1}<br />{ui.faqSection.title2}</h2>
+            <p>{ui.faqSection.description}</p>
             <button className="text-link" onClick={() => scrollTo("contact")}>
-              Direkt sor <span>→</span>
+              {ui.faqSection.cta} <span>→</span>
             </button>
           </div>
           <div className="faq-list" data-reveal>
@@ -1209,16 +812,13 @@ export default function Home() {
             </div>
             <p className="eyebrow"><span className="prompt">root@future:~$</span> ./start-project</p>
             <h2>
-              Sıradaki iyi fikir
+              {ui.contact.title1}
               <br />
-              <span>seninki olabilir.</span>
+              <span>{ui.contact.title2}</span>
             </h2>
-            <p className="contact-intro">
-              Projeni, hedefini veya sadece kafandaki fikri anlat. En geç iki iş günü içinde
-              sana net bir sonraki adımla döneyim.
-            </p>
+            <p className="contact-intro">{ui.contact.intro}</p>
             <div className="direct-contact">
-              <span>DOĞRUDAN E-POSTA</span>
+              <span>{ui.contact.directEmail}</span>
               <button onClick={copyEmail}>
                 {CONTACT_EMAIL} <span>⧉</span>
               </button>
@@ -1226,8 +826,8 @@ export default function Home() {
             <div className="contact-status">
               <span className="status-dot" />
               <div>
-                <strong>Şu an ulaşılabilir</strong>
-                <small>Ortalama yanıt süresi: 24–48 saat</small>
+                <strong>{ui.contact.available}</strong>
+                <small>{ui.contact.responseTime}</small>
               </div>
             </div>
           </div>
@@ -1240,75 +840,59 @@ export default function Home() {
             <div className="form-body">
               <div className="form-row">
                 <label>
-                  <span>01 / İSMİN</span>
-                  <input name="name" type="text" placeholder="Nasıl hitap edeyim?" required />
+                  <span>{ui.contact.nameLabel}</span>
+                  <input name="name" type="text" placeholder={ui.contact.namePlaceholder} required />
                 </label>
                 <label>
-                  <span>02 / E-POSTA</span>
-                  <input name="email" type="email" placeholder="sen@markan.com" required />
+                  <span>{ui.contact.emailLabel}</span>
+                  <input name="email" type="email" placeholder={ui.contact.emailPlaceholder} required />
                 </label>
               </div>
               <label>
-                <span>03 / ŞİRKET VEYA MARKA <small>(opsiyonel)</small></span>
-                <input name="company" type="text" placeholder="Markanın adı" />
+                <span>{ui.contact.companyLabel} <small>{ui.contact.optional}</small></span>
+                <input name="company" type="text" placeholder={ui.contact.companyPlaceholder} />
               </label>
               <div className="form-row">
                 <label>
-                  <span>04 / HİZMET</span>
+                  <span>{ui.contact.serviceLabel}</span>
                   <select
                     name="service"
                     value={selectedService}
                     onChange={(event) => setSelectedService(event.target.value)}
                   >
-                    <option>Web deneyimleri</option>
-                    <option>AI Ajanları & otomasyon</option>
-                    <option>Oyun geliştirme</option>
-                    <option>Mobil uygulama</option>
-                    <option>Finans uygulaması</option>
-                    <option>İşletme otomasyonu</option>
-                    {![
-                      "Web deneyimleri",
-                      "AI Ajanları & otomasyon",
-                      "Oyun geliştirme",
-                      "Mobil uygulama",
-                      "Finans uygulaması",
-                      "İşletme otomasyonu",
-                    ].includes(selectedService) && <option>{selectedService}</option>}
+                    {ui.contact.services.map((service) => <option key={service}>{service}</option>)}
+                    {!ui.contact.services.includes(selectedService as never) && <option>{selectedService}</option>}
                   </select>
                 </label>
                 <label>
-                  <span>05 / BÜTÇE</span>
-                  <select name="budget" defaultValue="75.000 – 150.000 ₺">
-                    <option>45.000 – 75.000 ₺</option>
-                    <option>75.000 – 150.000 ₺</option>
-                    <option>150.000 – 300.000 ₺</option>
-                    <option>300.000 ₺ +</option>
-                    <option>Henüz net değil</option>
+                  <span>{ui.contact.budgetLabel}</span>
+                  <select name="budget" defaultValue={ui.contact.budgets[1]}>
+                    {ui.contact.budgets.map((budget) => <option key={budget}>{budget}</option>)}
                   </select>
                 </label>
               </div>
               <label>
-                <span>06 / PROJENİ ANLAT</span>
+                <span>{ui.contact.messageLabel}</span>
                 <textarea
                   name="message"
                   rows={5}
-                  placeholder="Ne inşa ediyoruz, kimin için ve ne zaman yayında olmalı?"
+                  placeholder={ui.contact.messagePlaceholder}
                   required
                 />
               </label>
               <label className="contact-honeypot" aria-hidden="true">
-                <span>WEB SİTESİ</span>
+                <span>{ui.contact.website}</span>
                 <input name="website" type="text" tabIndex={-1} autoComplete="off" />
               </label>
               <div className="form-submit">
-                <span>Talebin güvenli biçimde doğrudan bize iletilir.</span>
+                <span>{ui.contact.secure}</span>
                 <button
                   className="primary-button"
                   type="submit"
                   disabled={isSubmitting}
                   aria-busy={isSubmitting}
                 >
-                  {isSubmitting ? "Gönderiliyor…" : "Talebi gönder"} <span>↗</span>
+                  {isSubmitting ? ui.contact.sending : ui.contact.submit} <span>↗</span>
                 </button>
               </div>
             </div>
@@ -1322,15 +906,15 @@ export default function Home() {
             <span className="brand-mark">&gt;_</span>
             <span>c0denail</span>
           </a>
-          <p>Tasarım, kod ve merakla<br />İstanbul&apos;da üretildi.</p>
+          <p>{ui.footer.line1}<br />{ui.footer.line2}</p>
           <div className="footer-nav">
-            <button onClick={() => scrollTo("about")}>Hakkımda</button>
-            <button onClick={() => scrollTo("services")}>Hizmetler</button>
-            <button onClick={() => scrollTo("work")}>İşler</button>
-            <button onClick={() => scrollTo("contact")}>İletişim</button>
+            <button onClick={() => scrollTo("about")}>{ui.footer.about}</button>
+            <button onClick={() => scrollTo("services")}>{ui.footer.services}</button>
+            <button onClick={() => scrollTo("work")}>{ui.footer.work}</button>
+            <button onClick={() => scrollTo("contact")}>{ui.footer.contact}</button>
           </div>
           <button className="back-top" onClick={() => scrollTo("home")}>
-            Yukarı <span>↑</span>
+            {ui.footer.top} <span>↑</span>
           </button>
         </div>
         <div className="section-shell footer-bottom">
@@ -1340,7 +924,7 @@ export default function Home() {
         </div>
       </footer>
 
-      <Chatbot />
+      <Chatbot locale={locale} />
 
       {toast && (
         <div className={`toast toast-${toast.status}`} role="status">

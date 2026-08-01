@@ -1,3 +1,5 @@
+import type { Locale } from "../i18n";
+
 type CategoryKey =
   | "web"
   | "agents"
@@ -138,6 +140,133 @@ const CATEGORY_INFO: Record<CategoryKey, CategoryInfo> = {
   },
 };
 
+const EN_CATEGORY_INFO: Record<CategoryKey, CategoryInfo> = {
+  web: {
+    terms: [
+      "web",
+      "website",
+      "company site",
+      "corporate site",
+      "landing page",
+      "e-commerce",
+      "ecommerce",
+      "online store",
+      "shop",
+      "commerce",
+    ],
+    summary:
+      "There are three Web & E-commerce packages:\n• Launch Site — a professional brand or company website\n• Commerce Pro — product, inventory, cart, payment, and order infrastructure\n• Growth Platform — multilingual content, CRM connections, campaigns, and growth automations",
+    prices:
+      "Web & E-commerce packages start at:\n• Launch Site: ₺24,000\n• Commerce Pro: ₺35,000\n• Growth Platform: ₺69,000\nThe final budget is confirmed after the discovery call, based on scope and integrations.",
+    durations:
+      "Estimated Web & E-commerce delivery times:\n• Launch Site: 2–3 weeks\n• Commerce Pro: 3–5 weeks\n• Growth Platform: 6–9 weeks",
+    technologies:
+      "Depending on the project, the web stack may include Next.js, TypeScript, a headless CMS, payment APIs, analytics, SEO tools, and Vercel.",
+  },
+  agents: {
+    terms: [
+      "ai agent",
+      "agent",
+      "artificial intelligence",
+      "llm",
+      "rag",
+      "chatbot",
+      "workflow agent",
+    ],
+    summary:
+      "There are three AI Agent packages:\n• Agent Starter — one focused task and one tool/API\n• Workflow Agent — a multi-step workflow with up to three integrations\n• Agent Platform — multiple agents, roles, memory, and enterprise management",
+    prices:
+      "AI Agent packages start at:\n• Agent Starter: ₺29,000\n• Workflow Agent: ₺49,000\n• Agent Platform: ₺89,000",
+    durations:
+      "Estimated AI Agent delivery times:\n• Agent Starter: 2–3 weeks\n• Workflow Agent: 3–5 weeks\n• Agent Platform: 6–9 weeks",
+    technologies:
+      "Depending on the use case, an AI agent project may use LLM APIs, RAG, a vector database, tool calling, a workflow engine, REST APIs, and audit logs.",
+  },
+  mobile: {
+    terms: [
+      "mobile",
+      "mobile app",
+      "ios",
+      "android",
+      "react native",
+      "expo",
+      "app store",
+      "google play",
+      "application",
+    ],
+    summary:
+      "There are three Mobile App packages:\n• Mobile Prototype — test the idea on a real device\n• Mobile MVP — launch with real users\n• Mobile Scale — add payments, subscriptions, offline use, and advanced operations",
+    prices:
+      "Mobile App packages start at:\n• Mobile Prototype: ₺39,000\n• Mobile MVP: ₺64,000\n• Mobile Scale: ₺109,000",
+    durations:
+      "Estimated Mobile App delivery times:\n• Mobile Prototype: 3–4 weeks\n• Mobile MVP: 5–8 weeks\n• Mobile Scale: 8–12 weeks",
+    technologies:
+      "Mobile projects may use React Native, Expo, TypeScript, REST APIs, push notifications, analytics, and CI/CD.",
+  },
+  games: {
+    terms: [
+      "game",
+      "gaming",
+      "unity",
+      "open world",
+      "2d",
+      "3d",
+      "vertical slice",
+      "playtest",
+    ],
+    summary:
+      "There are three Game Development packages:\n• Playable Concept — test the core idea and fun factor\n• World Prototype — build map, quest, inventory, and NPC systems\n• Vertical Slice — create a polished build for a publisher or investor presentation",
+    prices:
+      "Open-world Game packages start at:\n• Playable Concept: ₺39,000\n• World Prototype: ₺74,000\n• Vertical Slice: ₺119,000",
+    durations:
+      "Estimated Game project delivery times:\n• Playable Concept: 3–5 weeks\n• World Prototype: 5–8 weeks\n• Vertical Slice: 8–12 weeks",
+    technologies:
+      "Game projects may use Unity, C#, world streaming, AI navigation, save systems, profiling, and shader tools.",
+  },
+  finance: {
+    terms: [
+      "finance",
+      "financial",
+      "fintech",
+      "portfolio",
+      "bank",
+      "market",
+      "dashboard",
+      "income",
+      "expense",
+      "reporting",
+    ],
+    summary:
+      "There are three Finance System packages:\n• Finance Starter — a core data model and dashboard\n• Finance Product — live APIs, charts, roles, and reporting\n• Finance Scale — multiple companies, advanced analytics, audit logs, and security",
+    prices:
+      "Finance System packages start at:\n• Finance Starter: ₺39,000\n• Finance Product: ₺69,000\n• Finance Scale: ₺109,000",
+    durations:
+      "Estimated Finance System delivery times:\n• Finance Starter: 2–4 weeks\n• Finance Product: 4–7 weeks\n• Finance Scale: 7–10 weeks",
+    technologies:
+      "Finance projects may use Next.js, TypeScript, C#, PostgreSQL, REST APIs, WebSockets, RBAC, and data-visualization tools.",
+  },
+  automation: {
+    terms: [
+      "automation",
+      "business automation",
+      "operations",
+      "workflow",
+      "crm",
+      "inventory",
+      "process automation",
+      "excel",
+    ],
+    summary:
+      "There are three Business Automation packages:\n• Process Starter — automate one repetitive task\n• Operations Center — combine CRM, inventory, or task modules\n• Smart Operations — connect departments and add AI-assisted document processing",
+    prices:
+      "Business Automation packages start at:\n• Process Starter: ₺29,000\n• Operations Center: ₺44,000\n• Smart Operations: ₺79,000",
+    durations:
+      "Estimated Business Automation delivery times:\n• Process Starter: 2–3 weeks\n• Operations Center: 4–6 weeks\n• Smart Operations: 6–9 weeks",
+    technologies:
+      "Automation projects may use Next.js, Node.js, PostgreSQL, workflow systems, messaging APIs, reporting tools, and cloud services.",
+  },
+};
+
 const PACKAGE_ANSWERS = [
   {
     terms: ["launch site"],
@@ -231,9 +360,102 @@ const PACKAGE_ANSWERS = [
   },
 ];
 
-function normalize(value: string) {
+const EN_PACKAGE_ANSWERS = [
+  {
+    terms: ["launch site"],
+    answer:
+      "Launch Site includes a custom design for 1–5 pages, responsive layouts, a contact form, essential integrations, technical SEO, analytics, domain connection, and two revision rounds. It starts at ₺24,000 and usually takes 2–3 weeks.",
+  },
+  {
+    terms: ["commerce pro"],
+    answer:
+      "Commerce Pro includes custom storefront and product pages, product/category/inventory management, cart, payments, orders, a CMS or admin panel, email notifications, SEO, and 14 days of support. It starts at ₺35,000 and usually takes 3–5 weeks.",
+  },
+  {
+    terms: ["growth platform"],
+    answer:
+      "Growth Platform includes multilingual and multi-region support, advanced filtering and search, product variants, CRM/marketing/accounting connections, a blog, campaigns, landing pages, and A/B testing infrastructure. It starts at ₺69,000 and usually takes 6–9 weeks.",
+  },
+  {
+    terms: ["finance starter", "finans başlangıç"],
+    answer:
+      "Finance Starter includes a financial data model, secure sign-in, an income/expense or portfolio dashboard, manual data entry, CSV import, a mobile-friendly interface, deployment, and two revision rounds. It starts at ₺39,000 and usually takes 2–4 weeks.",
+  },
+  {
+    terms: ["finance product", "finans ürün"],
+    answer:
+      "Finance Product includes a live banking, market, or custom API, charts, user roles, PDF/Excel reporting, notifications, and 14 days of support. It starts at ₺69,000 and usually takes 4–7 weeks.",
+  },
+  {
+    terms: ["finance scale", "finans ölçek"],
+    answer:
+      "Finance Scale includes multi-company or multi-client support, custom transaction and approval flows, risk and performance views, an admin panel, audit logs, security, load testing, and 30 days of support. It starts at ₺109,000 and usually takes 7–10 weeks.",
+  },
+  {
+    terms: ["agent starter", "ajan başlangıç"],
+    answer:
+      "Agent Starter includes a custom agent focused on one task, prompt and behavior design, one tool/API integration, error handling, test scenarios, and two revision rounds. It starts at ₺29,000 and usually takes 2–3 weeks.",
+  },
+  {
+    terms: ["workflow agent", "workflow ajan"],
+    answer:
+      "Workflow Agent includes a multi-step task flow, up to three tool integrations, a knowledge base, human approval steps, run history, an admin screen, and 14 days of support. It starts at ₺49,000 and usually takes 3–5 weeks.",
+  },
+  {
+    terms: ["agent platform", "ajan platformu"],
+    answer:
+      "Agent Platform includes a multi-agent architecture, roles and permissions, CRM/email connections, persistent memory, enterprise knowledge, guardrails, and cost tracking. It starts at ₺89,000 and usually takes 6–9 weeks.",
+  },
+  {
+    terms: ["mobile prototype", "mobil prototip"],
+    answer:
+      "Mobile Prototype includes user flows, five core screens, a React Native foundation, local data, Android/iOS test builds, and two revision rounds. It starts at ₺39,000 and usually takes 3–4 weeks.",
+  },
+  {
+    terms: ["mobile mvp", "mobil mvp"],
+    answer:
+      "Mobile MVP includes an iOS/Android app, sign-up and profiles, API/database/cloud connections, push notifications, an admin screen, analytics, and store-launch preparation. It starts at ₺64,000 and usually takes 5–8 weeks.",
+  },
+  {
+    terms: ["mobile scale", "mobil ölçek"],
+    answer:
+      "Mobile Scale includes subscriptions or payments, offline use, data synchronization, advanced analytics, CI/CD, store release management, and 30 days of support. It starts at ₺109,000 and usually takes 8–12 weeks.",
+  },
+  {
+    terms: ["playable concept", "oynanabilir konsept"],
+    answer:
+      "Playable Concept includes the game idea and core loop, one area, character and camera controls, basic interaction, a quest prototype, temporary UI, and a playable demo. It starts at ₺39,000 and usually takes 3–5 weeks.",
+  },
+  {
+    terms: ["world prototype", "dünya prototipi"],
+    answer:
+      "World Prototype includes a map and biome, inventory, quests and progression, NPC and enemy AI, save/load systems, initial optimization, and two playtests. It starts at ₺74,000 and usually takes 5–8 weeks.",
+  },
+  {
+    terms: ["vertical slice"],
+    answer:
+      "Vertical Slice includes visual direction, a polished open-world area, combat/quest/character progression, custom UI and sound, performance work, and a publisher-ready presentation build. It starts at ₺119,000 and usually takes 8–12 weeks.",
+  },
+  {
+    terms: ["process starter", "süreç başlangıç"],
+    answer:
+      "Process Starter includes process analysis, one primary automation, one external service, a tracking panel, email/message notifications, and a team handover. It starts at ₺29,000 and usually takes 2–3 weeks.",
+  },
+  {
+    terms: ["operations center", "operasyon merkezi"],
+    answer:
+      "Operations Center includes three main CRM, inventory, or task modules, user roles, a live operations dashboard, up to three integrations, Excel export, training, and 14 days of support. It starts at ₺44,000 and usually takes 4–6 weeks.",
+  },
+  {
+    terms: ["smart operations", "akıllı operasyon"],
+    answer:
+      "Smart Operations includes cross-department workflows, AI-assisted document/request processing, management dashboards, approvals, audit logs, backups, security, and 30 days of support. It starts at ₺79,000 and usually takes 6–9 weeks.",
+  },
+];
+
+function normalize(value: string, locale: Locale = "tr") {
   return value
-    .toLocaleLowerCase("tr-TR")
+    .toLocaleLowerCase(locale === "tr" ? "tr-TR" : "en-US")
     .replace(/[^\p{L}\p{N}\s&+₺.-]/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -243,8 +465,12 @@ function includesAny(value: string, terms: string[]) {
   return terms.some((term) => value.includes(term));
 }
 
-function detectCategory(lastMessage: string, conversation: string): CategoryKey | null {
-  const orderedCategories = Object.entries(CATEGORY_INFO) as [
+function detectCategory(
+  lastMessage: string,
+  conversation: string,
+  categoryInfo: Record<CategoryKey, CategoryInfo> = CATEGORY_INFO,
+): CategoryKey | null {
+  const orderedCategories = Object.entries(categoryInfo) as [
     CategoryKey,
     CategoryInfo,
   ][];
@@ -255,7 +481,269 @@ function detectCategory(lastMessage: string, conversation: string): CategoryKey 
   );
 }
 
-export function getSiteAnswer(message: string, conversation = message) {
+function getEnglishSiteAnswer(message: string, conversation: string) {
+  const clean = normalize(message, "en");
+  const cleanConversation = normalize(conversation, "en");
+  const category = detectCategory(clean, cleanConversation, EN_CATEGORY_INFO);
+
+  const packageMatch = EN_PACKAGE_ANSWERS.find((pack) =>
+    includesAny(clean, pack.terms),
+  );
+  if (packageMatch) return packageMatch.answer;
+
+  if (
+    clean.length < 40 &&
+    ["hello", "hi", "hey", "good morning", "good afternoon", "good evening"].some(
+      (greeting) => clean === greeting || clean.startsWith(`${greeting} `),
+    )
+  ) {
+    return "Hello! I can help with web and e-commerce projects, AI agents, mobile apps, games, finance systems, and business automation. What would you like to explore?";
+  }
+
+  if (
+    includesAny(clean, [
+      "contact",
+      "get in touch",
+      "reach you",
+      "email",
+      "e-mail",
+      "quote",
+      "proposal",
+    ])
+  ) {
+    return "For a detailed quote, use the contact form on this page or email info@c0denail.com. Including your goal, scope, approximate budget, and target launch date will help us assess the project faster.";
+  }
+
+  const asksPrice = includesAny(clean, [
+    "price",
+    "pricing",
+    "cost",
+    "budget",
+    "how much",
+    "fee",
+    "rate",
+    "lira",
+    "₺",
+  ]);
+  if (asksPrice && category) return EN_CATEGORY_INFO[category].prices;
+  if (asksPrice) {
+    return "Starting prices by category:\n• Web & E-commerce: ₺24,000\n• AI Agents: ₺29,000\n• Business Automation: ₺29,000\n• Finance Systems: ₺39,000\n• Mobile Apps: ₺39,000\n• Open-world Games: ₺39,000\nThe final budget is confirmed after a discovery call.";
+  }
+
+  const asksDuration = includesAny(clean, [
+    "duration",
+    "timeline",
+    "delivery",
+    "how long",
+    "how many weeks",
+    "weeks",
+    "schedule",
+    "when can",
+  ]);
+  if (asksDuration && category) return EN_CATEGORY_INFO[category].durations;
+  if (asksDuration) {
+    return "Depending on the package, projects typically take about 2–12 weeks. Websites and single-process automations can start at 2–3 weeks, while larger mobile, game, and scale packages may take 8–12 weeks. Which category would you like a timeline for?";
+  }
+
+  const asksTechnology = includesAny(clean, [
+    "technology",
+    "technologies",
+    "tech stack",
+    "stack",
+    "programming language",
+    "infrastructure",
+    "framework",
+    "c#",
+    "next.js",
+    "react native",
+    "unity",
+    "typescript",
+  ]);
+  if (asksTechnology && category) {
+    return EN_CATEGORY_INFO[category].technologies;
+  }
+  if (asksTechnology) {
+    return "The technology stack is selected for each project. Common choices include Next.js, TypeScript, C#, Node.js, PostgreSQL, React Native, Expo, Unity, REST APIs, WebSockets, and cloud services. Which kind of product are you asking about?";
+  }
+
+  if (
+    includesAny(clean, [
+      "add-on",
+      "add on",
+      "extra module",
+      "brand direction",
+      "content and copy",
+      "priority delivery",
+      "rush delivery",
+    ])
+  ) {
+    return "Available add-ons:\n• Brand direction: +₺15,000\n• Content & copy: +₺10,000\n• Priority delivery: +₺20,000\nAvailability and the final schedule are assessed together with the project scope.";
+  }
+
+  if (
+    includesAny(clean, [
+      "how does the process",
+      "project process",
+      "working process",
+      "how do we start",
+      "project stages",
+      "your process",
+    ])
+  ) {
+    return "The project moves through four stages:\n1. Discovery — goals and success criteria\n2. Direction — information architecture, visual language, and technical approach\n3. Production — design and development\n4. Launch — testing, performance, and handover";
+  }
+
+  if (
+    includesAny(clean, [
+      "offer support",
+      "provide support",
+      "ongoing support",
+      "maintenance",
+      "after launch",
+      "post-launch",
+      "bug fix",
+    ])
+  ) {
+    return "Every package includes a post-delivery bug-fix period. An ongoing monthly support plan can also be arranged for continuous development, maintenance, and new features.";
+  }
+
+  if (includesAny(clean, ["revision", "revisions", "change request"])) {
+    return "Starter packages explicitly include two revision rounds. Feedback and support for other packages follow their listed scope; the exact revision plan is confirmed at the start of the project.";
+  }
+
+  if (
+    includesAny(clean, [
+      "ready-made theme",
+      "ready made theme",
+      "template",
+      "custom design",
+      "prebuilt theme",
+    ])
+  ) {
+    return "Ready-made themes are not used. Each project is designed around its needs, combining reliable technologies with a brand-specific interface and user experience.";
+  }
+
+  if (includesAny(clean, ["seo", "search engine", "google ranking"])) {
+    return "Launch Site and Commerce Pro include technical SEO and performance work. Growth Platform also adds infrastructure for content, campaigns, landing pages, and conversion analytics.";
+  }
+
+  if (
+    includesAny(clean, [
+      "payment",
+      "checkout",
+      "shopping cart",
+      "order",
+      "inventory",
+      "sell products",
+    ])
+  ) {
+    return "Commerce Pro includes cart, payments, orders, products, categories, and inventory management. If you also need multiple languages, advanced filtering, product variants, and CRM connections, Growth Platform is the better fit.";
+  }
+
+  if (includesAny(clean, ["admin panel", "management panel", "cms"])) {
+    return "A CMS or admin panel is included in Commerce Pro. Role-based management and operations screens can also be built into finance, AI agent, and automation packages when needed.";
+  }
+
+  if (
+    includesAny(clean, [
+      "multilingual",
+      "multiple languages",
+      "multi-language",
+      "international",
+      "different countries",
+      "multi-region",
+    ])
+  ) {
+    return "Multilingual and multi-region web support is included in Growth Platform. Region-specific content, product, and integration needs are confirmed during discovery.";
+  }
+
+  if (
+    includesAny(clean, [
+      "analytics",
+      "report",
+      "reporting",
+      "measurement",
+      "metrics",
+    ])
+  ) {
+    return "Web packages can include analytics and conversion measurement, while finance, mobile, and automation packages can include product-specific reporting dashboards. The required metrics are defined during discovery.";
+  }
+
+  if (
+    includesAny(clean, [
+      "security",
+      "permission",
+      "role",
+      "audit",
+      "data protection",
+    ])
+  ) {
+    return "Advanced packages such as Finance Scale and Agent Platform include role-based permissions, audit logs, and security layers. Exact security requirements are planned around the data type and user roles.";
+  }
+
+  if (
+    includesAny(clean, [
+      "app store",
+      "google play",
+      "store launch",
+      "publish the app",
+    ])
+  ) {
+    return "Mobile MVP includes App Store and Google Play launch preparation. Mobile Scale also includes CI/CD and store release management.";
+  }
+
+  if (
+    includesAny(clean, [
+      "where are you",
+      "location",
+      "istanbul",
+      "remote",
+      "worldwide",
+    ])
+  ) {
+    return "c0denail is based in Istanbul and can deliver projects remotely. You can reach us at info@c0denail.com or through the project form on this page.";
+  }
+
+  if (
+    includesAny(clean, [
+      "who are you",
+      "what is c0denail",
+      "what do you do",
+      "your services",
+      "services do you offer",
+    ])
+  ) {
+    return "c0denail is an Istanbul-based software studio building web and e-commerce products, AI agents, mobile apps, games, finance systems, and business automation solutions.";
+  }
+
+  if (
+    includesAny(clean, [
+      "right package",
+      "which package",
+      "choose a package",
+      "recommend a package",
+      "package recommendation",
+      "best package",
+    ])
+  ) {
+    if (category) {
+      return `${EN_CATEGORY_INFO[category].summary}\n\nTell me your goal, approximate budget, and target launch date, and I can narrow these three options down further.`;
+    }
+    return "To find the right package, let’s first choose the product type: web/e-commerce, AI agent, mobile app, game, finance system, or business automation. Then we can narrow the options based on your goal and approximate budget.";
+  }
+
+  if (category) return EN_CATEGORY_INFO[category].summary;
+
+  return "This assistant answers using only the service and package information on the c0denail website. You can ask about web/e-commerce, AI agents, mobile apps, games, finance systems, business automation, prices, timelines, technologies, or the project process.";
+}
+
+export function getSiteAnswer(
+  message: string,
+  conversation = message,
+  locale: Locale = "tr",
+) {
+  if (locale === "en") return getEnglishSiteAnswer(message, conversation);
+
   const clean = normalize(message);
   const cleanConversation = normalize(conversation);
   const category = detectCategory(clean, cleanConversation);

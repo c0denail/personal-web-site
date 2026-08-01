@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,15 +15,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Emirhan Tuncer — Creative Developer",
   description:
-    "Markalar ve girişimler için web deneyimleri, AI ajanları, oyunlar ve mobil uygulamalar.",
+    "Web experiences, AI agents, games, and mobile applications for brands and startups.",
   applicationName: "c0denail",
   keywords: [
     "Emirhan Tuncer",
     "creative developer",
-    "web tasarım",
-    "web geliştirme",
-    "dijital ürün",
-    "AI otomasyon",
+    "web design",
+    "web development",
+    "digital product",
+    "AI automation",
   ],
   authors: [{ name: "Emirhan Tuncer" }],
   creator: "Emirhan Tuncer",
@@ -33,24 +33,24 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Emirhan Tuncer — Creative Developer",
-    description: "Fikri koda, kodu ürüne. Tasarım × Kod × AI.",
+    description: "Ideas into code, code into products. Design × Code × AI.",
     type: "website",
-    locale: "tr_TR",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Emirhan Tuncer — Creative Developer",
-    description: "Fikri koda, kodu ürüne. Tasarım × Kod × AI.",
+    description: "Ideas into code, code into products. Design × Code × AI.",
   },
 };
 
-export default function RootLayout({
+export default function EnglishRootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
       </body>

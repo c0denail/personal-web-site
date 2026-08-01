@@ -1,3 +1,5 @@
+import type { Locale } from "../i18n";
+
 export type ProjectTone = "violet" | "green" | "orange" | "blue" | "cyan" | "gold";
 
 export type Project = {
@@ -28,7 +30,7 @@ export type Project = {
   }[];
 };
 
-export const projects: Project[] = [
+const trProjects: Project[] = [
   {
     id: "finance",
     index: "01",
@@ -445,6 +447,435 @@ export const projects: Project[] = [
   },
 ];
 
-export function getProject(slug: string) {
-  return projects.find((project) => project.id === slug);
+const enProjects: Project[] = [
+  {
+    id: "finance",
+    index: "01",
+    title: "FINANCIAL SYSTEMS",
+    category: "Fintech / Web & Mobile",
+    description: "Financial products that unify tracking, analysis, and transaction workflows.",
+    stack: ["Fintech", "Real-time Data", "Dashboard"],
+    label: "FIN",
+    labelDetail: "Financial Applications",
+    tone: "violet",
+    duration: "8–12 weeks",
+    role: "Product strategy, UX/UI, and full-stack development",
+    problem: [
+      "Financial data was scattered across different sources, making it difficult for teams to see the current state at a glance.",
+      "Manual reporting processes were time-consuming, while user roles and critical transaction records required a more secure structure.",
+    ],
+    solution: [
+      "A product architecture was designed to bring live data streams, transaction history, and key performance indicators together in one modular dashboard.",
+      "Role-based access, audit logs, advanced filtering, and export workflows were built into the product’s core layers.",
+    ],
+    technologies: ["Next.js", "TypeScript", "C#", "PostgreSQL", "REST API", "WebSocket", "RBAC", "Charting"],
+    deliverables: [
+      "Financial data model and product information architecture",
+      "Real-time dashboard and charting system",
+      "Transaction list, filtering, and detail screens",
+      "Role-based user and permission management",
+      "Reporting and CSV/PDF export workflows",
+      "Responsive web interface and deployment setup",
+    ],
+    outcomes: [
+      {
+        value: "ONE DASHBOARD",
+        label: "Centralized visibility",
+        description: "Critical financial data and transaction statuses are brought together in one view.",
+      },
+      {
+        value: "LIVE",
+        label: "Data monitoring",
+        description: "Changing values can be monitored without manual refreshes.",
+      },
+      {
+        value: "RBAC",
+        label: "Controlled access",
+        description: "Each user can access only the data and actions permitted by their role.",
+      },
+      {
+        value: "WEB + MOBILE",
+        label: "Responsive experience",
+        description: "The dashboard preserves its core functionality across different screen sizes.",
+      },
+    ],
+    screens: [
+      {
+        kicker: "01 / OVERVIEW",
+        title: "Financial overview",
+        description: "The main control screen presents balances, cash flow, and performance indicators at a glance.",
+      },
+      {
+        kicker: "02 / TRANSACTIONS",
+        title: "Transaction center",
+        description: "A filterable activity list with status tracking and a detailed transaction review area.",
+      },
+      {
+        kicker: "03 / REPORTS",
+        title: "Reporting",
+        description: "A workflow for date- and category-based analysis and shareable report generation.",
+      },
+    ],
+  },
+  {
+    id: "agents",
+    index: "02",
+    title: "AI AGENTS",
+    category: "Artificial Intelligence / Automation",
+    description: "Custom AI agents that execute tasks and connect to business workflows.",
+    stack: ["LLM", "Tool Use", "Workflow"],
+    label: "AGENT",
+    labelDetail: "Intelligent Work Agents",
+    tone: "green",
+    duration: "6–10 weeks",
+    role: "Agent architecture, integration, security, and product interface",
+    problem: [
+      "Repetitive information gathering, classification, and response generation consumed teams’ time and required context to be carried constantly between tools.",
+      "General-purpose chat tools could not be introduced directly into production workflows because they did not work securely with company data, action permissions, and approval processes.",
+    ],
+    solution: [
+      "Custom agent workflows were built to use tools for specific tasks, search organizational knowledge with citations, and request human approval when needed.",
+      "Every task step was made traceable, with a centralized control layer for error handling, permission boundaries, and cost monitoring.",
+    ],
+    technologies: ["LLM API", "RAG", "Vector DB", "Tool Calling", "Workflow Engine", "REST API", "Audit Logs"],
+    deliverables: [
+      "Use-case definition and agent task map",
+      "Organizational knowledge base and cited answer system",
+      "External service and company API integrations",
+      "Human-approved critical action workflows",
+      "Task history, logging, and error-monitoring dashboard",
+      "Prompt, security, and cost optimization",
+    ],
+    outcomes: [
+      {
+        value: "24/7",
+        label: "Task availability",
+        description: "Configured agents can accept suitable tasks at any time of day.",
+      },
+      {
+        value: "CITED",
+        label: "Knowledge generation",
+        description: "Answers can be linked to content in the connected knowledge base.",
+      },
+      {
+        value: "APPROVED",
+        label: "Critical actions",
+        description: "Risky steps are not executed without user approval.",
+      },
+      {
+        value: "TRACEABLE",
+        label: "Agent decisions",
+        description: "Tool calls, results, and error states are recorded centrally.",
+      },
+    ],
+    screens: [
+      {
+        kicker: "01 / COMMAND",
+        title: "Agent workspace",
+        description: "An interface for assigning tasks, adding context, and reviewing results with their sources.",
+      },
+      {
+        kicker: "02 / WORKFLOW",
+        title: "Workflow design",
+        description: "A visual task chain connecting tools, decision points, and human approvals.",
+      },
+      {
+        kicker: "03 / OBSERVABILITY",
+        title: "Task observability",
+        description: "A control panel combining agent statuses, cost, duration, and error logs.",
+      },
+    ],
+  },
+  {
+    id: "games",
+    index: "03",
+    title: "OPEN-WORLD GAMES",
+    category: "Game Development / Open World",
+    description: "Game projects with open-world structures and interactive mechanics.",
+    stack: ["World Design", "Gameplay Systems", "Optimization"],
+    label: "GAME",
+    labelDetail: "2D–3D Open-World Games",
+    tone: "orange",
+    duration: "10–16 weeks",
+    role: "Game design, prototyping, and technical development",
+    problem: [
+      "Open-world concepts often grew without controlled scope, and moving into content production before proving the core gameplay loop created significant development risk.",
+      "Designing map, quest, inventory, and save systems in isolation could lead to performance and player-experience issues.",
+    ],
+    solution: [
+      "The core gameplay loop of movement, exploration, and interaction was prototyped first, followed by a focused world region built to support that loop.",
+      "Quest, inventory, NPC, and save systems were unified under a shared event architecture to produce an extensible vertical slice.",
+    ],
+    technologies: ["Unity", "C#", "World Streaming", "AI Navigation", "Save System", "Profiling", "Shader Tools"],
+    deliverables: [
+      "Gameplay loop and scope document",
+      "Character movement and camera system",
+      "Interactive sample open-world region",
+      "Quest, inventory, and NPC foundations",
+      "Save/load system and core settings",
+      "Performance profile and production roadmap",
+    ],
+    outcomes: [
+      {
+        value: "1 SLICE",
+        label: "Playable section",
+        description: "An end-to-end game slice demonstrates the core systems working together.",
+      },
+      {
+        value: "MODULAR",
+        label: "Game systems",
+        description: "New content can be added without disrupting the existing core.",
+      },
+      {
+        value: "PERSISTED",
+        label: "Player progress",
+        description: "Quest, location, and inventory states can be stored persistently.",
+      },
+      {
+        value: "PROFILED",
+        label: "Performance",
+        description: "Bottlenecks are measured and made visible before production.",
+      },
+    ],
+    screens: [
+      {
+        kicker: "01 / WORLD",
+        title: "World exploration",
+        description: "A sample region with environmental cues and interaction points that guide the player.",
+      },
+      {
+        kicker: "02 / SYSTEMS",
+        title: "Quests and inventory",
+        description: "An interface combining active quests, collected items, and progression status.",
+      },
+      {
+        kicker: "03 / DEBUG",
+        title: "Developer view",
+        description: "A technical control layer for world streaming, NPC states, and performance metrics.",
+      },
+    ],
+  },
+  {
+    id: "web",
+    index: "04",
+    title: "WEB & E-COMMERCE",
+    category: "Web / Commerce & Content",
+    description: "Corporate websites, blogs, and sales-focused e-commerce experiences.",
+    stack: ["E-commerce", "Blog", "SEO"],
+    label: "WEB",
+    labelDetail: "Websites & Tools",
+    tone: "blue",
+    duration: "4–8 weeks",
+    role: "Strategy, UX/UI, frontend, and launch",
+    problem: [
+      "Brand messaging, product content, and purchase journeys were inconsistent across pages, preventing visitors from reaching the information they needed quickly.",
+      "Because mobile experience, content management, and technical SEO were considered late, post-launch growth and measurement became difficult.",
+    ],
+    solution: [
+      "The content hierarchy was rebuilt around conversion goals, while brand storytelling, product discovery, and quote or purchase journeys were unified through a shared design system.",
+      "A manageable content structure, performance-focused frontend, and measurement events were included in the deployment foundation.",
+    ],
+    technologies: ["Next.js", "TypeScript", "Headless CMS", "Payment API", "Analytics", "SEO", "Vercel"],
+    deliverables: [
+      "Content strategy and site map",
+      "Custom responsive interface design",
+      "Product, category, and content pages",
+      "Cart, payment, or quote workflows",
+      "CMS and manageable content model",
+      "Technical SEO, analytics, and deployment setup",
+    ],
+    outcomes: [
+      {
+        value: "MOBILE",
+        label: "First-class experience",
+        description: "Core content and conversion journeys are arranged specifically for smaller screens.",
+      },
+      {
+        value: "CMS",
+        label: "Content control",
+        description: "The team can update core copy and products without developer support.",
+      },
+      {
+        value: "SEO",
+        label: "Search foundation",
+        description: "Metadata, indexing, and structured content are included in the technical foundation.",
+      },
+      {
+        value: "MEASURED",
+        label: "Conversion journey",
+        description: "Critical buttons and form steps can be tracked through analytics events.",
+      },
+    ],
+    screens: [
+      {
+        kicker: "01 / LANDING",
+        title: "Brand and product story",
+        description: "A conversion-focused landing experience that communicates the value proposition in seconds.",
+      },
+      {
+        kicker: "02 / CATALOG",
+        title: "Product discovery",
+        description: "An interface that unifies categories, filters, and product details in a clear shopping journey.",
+      },
+      {
+        kicker: "03 / CONTENT",
+        title: "Content hub",
+        description: "A manageable publishing area supporting search visibility and subject-matter expertise.",
+      },
+    ],
+  },
+  {
+    id: "mobile",
+    index: "05",
+    title: "MOBILE APPS",
+    category: "Mobile / Consumer Apps",
+    description: "iOS and Android applications inspired by successful product models.",
+    stack: ["iOS", "Android", "React Native"],
+    label: "APP",
+    labelDetail: "iOS & Android",
+    tone: "cyan",
+    duration: "8–14 weeks",
+    role: "Mobile product design, React Native, and store readiness",
+    problem: [
+      "Moving web processes directly onto mobile screens resulted in long forms, complex navigation, and low repeat usage.",
+      "The cost of separate iOS and Android development increased further with notification, offline-use, and release-management requirements.",
+    ],
+    solution: [
+      "Critical user tasks were transformed into short mobile journeys, supported by an interface system that adapts to platform behaviors on a shared codebase.",
+      "Authentication, notifications, analytics, and offline data needs were addressed in the first stage of the product architecture.",
+    ],
+    technologies: ["React Native", "Expo", "TypeScript", "Push Notifications", "REST API", "Analytics", "CI/CD"],
+    deliverables: [
+      "User flows and mobile information architecture",
+      "Responsive screen set for iOS and Android",
+      "Authentication and profile management",
+      "API integration and local data cache",
+      "Notifications and core analytics events",
+      "Test distribution and store-readiness package",
+    ],
+    outcomes: [
+      {
+        value: "2 PLATFORMS",
+        label: "Shared product",
+        description: "The iOS and Android experiences are managed through one product system.",
+      },
+      {
+        value: "OFFLINE",
+        label: "Continuous use",
+        description: "Selected core data can remain accessible without a network connection.",
+      },
+      {
+        value: "PUSH",
+        label: "Re-engagement",
+        description: "Opt-in notification scenarios guide users back to the app at the right time.",
+      },
+      {
+        value: "CI/CD",
+        label: "Release process",
+        description: "Test and release packages are prepared through a repeatable distribution workflow.",
+      },
+    ],
+    screens: [
+      {
+        kicker: "01 / HOME",
+        title: "Personalized home screen",
+        description: "A mobile starting point that highlights the user’s latest activity and next task.",
+      },
+      {
+        kicker: "02 / FLOW",
+        title: "Fast action flow",
+        description: "An experience that breaks long forms into small, clear steps with useful feedback.",
+      },
+      {
+        kicker: "03 / PROFILE",
+        title: "Account and preferences",
+        description: "A single screen for managing notifications, security, and personal settings.",
+      },
+    ],
+  },
+  {
+    id: "automation",
+    index: "06",
+    title: "BUSINESS AUTOMATION",
+    category: "SMB / Business Automation",
+    description: "Custom automation systems that simplify daily operations for small businesses.",
+    stack: ["Inventory", "CRM", "Reporting"],
+    label: "SMB",
+    labelDetail: "Business Systems",
+    tone: "gold",
+    duration: "6–10 weeks",
+    role: "Process analysis, automation architecture, and management dashboard",
+    problem: [
+      "Inventory, customer, order, and payment data lived across separate files and messaging channels, making it difficult to see the current state of operations.",
+      "Repeated data entry cost time and increased the risk of errors, while business owners had to prepare reports manually.",
+    ],
+    solution: [
+      "Daily operational steps were simplified and unified under a shared data model, with critical repetitions supported by automated tasks and notifications.",
+      "A role-based management dashboard made it possible to run inventory, customer, order, and reporting processes from one place.",
+    ],
+    technologies: ["Next.js", "Node.js", "PostgreSQL", "Workflow", "Messaging API", "Reporting", "Cloud"],
+    deliverables: [
+      "Current-process analysis and automation map",
+      "Inventory, customer, and order modules",
+      "Role-based management dashboard",
+      "Notification and task automations",
+      "Import and reporting tools",
+      "User training and operations documentation",
+    ],
+    outcomes: [
+      {
+        value: "ONE SOURCE",
+        label: "Shared data",
+        description: "Customer, product, and transaction data is centralized instead of scattered across files.",
+      },
+      {
+        value: "AUTOMATED",
+        label: "Repetitive work",
+        description: "Configured notifications and status updates reduce human intervention.",
+      },
+      {
+        value: "REAL-TIME",
+        label: "Operations view",
+        description: "Inventory, order, and payment statuses can be monitored from an up-to-date dashboard.",
+      },
+      {
+        value: "REPORTED",
+        label: "Decision support",
+        description: "Core business indicators become regular, shareable reports.",
+      },
+    ],
+    screens: [
+      {
+        kicker: "01 / OPERATIONS",
+        title: "Operations center",
+        description: "A dashboard combining the day’s order, inventory, and task statuses in one view.",
+      },
+      {
+        kicker: "02 / CUSTOMERS",
+        title: "Customer view",
+        description: "An area that brings contact details, transaction history, and follow-up notes into one customer record.",
+      },
+      {
+        kicker: "03 / REPORTS",
+        title: "Business reports",
+        description: "A reporting screen that summarizes sales, inventory movement, and operational volume by period.",
+      },
+    ],
+  },
+];
+
+const projectsByLocale: Record<Locale, Project[]> = {
+  tr: trProjects,
+  en: enProjects,
+};
+
+// Kept as the Turkish collection for existing Turkish-page imports.
+export const projects = trProjects;
+
+export function getProjects(locale: Locale = "tr") {
+  return projectsByLocale[locale];
+}
+
+export function getProject(slug: string, locale: Locale = "tr") {
+  return getProjects(locale).find((project) => project.id === slug);
 }

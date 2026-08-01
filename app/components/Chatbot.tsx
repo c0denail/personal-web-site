@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import type { Locale } from "../i18n";
 import styles from "./chatbot.module.css";
 
 type Message = {
@@ -10,31 +11,102 @@ type Message = {
   isError?: boolean;
 };
 
-const START_MESSAGE: Message = {
-  id: "welcome",
-  role: "assistant",
-  content:
-    "Merhaba, ben c0denail proje asistanıyım. İhtiyacını anlat; uygun hizmeti, paketi ve sonraki adımı birlikte netleştirelim.",
-};
+class ChatResponseError extends Error {}
 
-const QUICK_PROMPTS = [
-  "Bana uygun paketi bul",
-  "Web sitesi seçenekleri",
-  "E-ticaret özellikleri",
-  "AI ajanı geliştirmek istiyorum",
-  "Mobil uygulama paketleri",
-  "İşletmemi otomatikleştirmek istiyorum",
-  "Oyun projesi planlıyorum",
-  "Finans sistemi paketleri",
-  "Tüm başlangıç fiyatları",
-  "Teslim süreleri",
-  "Hangi teknolojiler kullanılıyor?",
-  "Proje süreci nasıl işliyor?",
-  "Yayın sonrası destek var mı?",
-  "Hazır tema kullanılıyor mu?",
-  "Ek modüller neler?",
-  "İletişime geçmek istiyorum",
-];
+const CHAT_COPY = {
+  tr: {
+    welcome:
+      "Merhaba, ben c0denail proje asistanıyım. İhtiyacını anlat; uygun hizmeti, paketi ve sonraki adımı birlikte netleştirelim.",
+    quickPrompts: [
+      "Bana uygun paketi bul",
+      "Web sitesi seçenekleri",
+      "E-ticaret özellikleri",
+      "AI ajanı geliştirmek istiyorum",
+      "Mobil uygulama paketleri",
+      "İşletmemi otomatikleştirmek istiyorum",
+      "Oyun projesi planlıyorum",
+      "Finans sistemi paketleri",
+      "Tüm başlangıç fiyatları",
+      "Teslim süreleri",
+      "Hangi teknolojiler kullanılıyor?",
+      "Proje süreci nasıl işliyor?",
+      "Yayın sonrası destek var mı?",
+      "Hazır tema kullanılıyor mu?",
+      "Ek modüller neler?",
+      "İletişime geçmek istiyorum",
+    ],
+    assistantLabel: "c0denail proje asistanı",
+    status: "Proje danışmanı · çevrimiçi",
+    resetLabel: "Yeni sohbet başlat",
+    resetTitle: "Yeni sohbet",
+    closeLabel: "Sohbeti kapat",
+    loadingLabel: "Yanıt hazırlanıyor",
+    quickStart: "Hızlı başlangıç",
+    quoteLabel: "Detaylı teklif için",
+    contactButton: "İletişim formuna git",
+    placeholder: "Projenle ilgili bir şey sor…",
+    messageLabel: "Mesajın",
+    sendLabel: "Mesajı gönder",
+    send: "Gönder",
+    disclaimer:
+      "Yanıtlar sitedeki içeriklerle sınırlıdır; kesin kapsam görüşmede netleşir.",
+    launcherTitle: "Bir fikrin mi var?",
+    launcherSubtitle: "Asistana sor",
+    openLabel: "Proje asistanını aç",
+    responseError: "Yanıt alınamadı.",
+    genericError: "Şu anda yanıt oluşturamıyorum. Lütfen tekrar dene.",
+  },
+  en: {
+    welcome:
+      "Hi, I’m the c0denail project assistant. Tell me what you need and I’ll help you narrow down the right service, package, and next step.",
+    quickPrompts: [
+      "Help me choose a package",
+      "Website options",
+      "E-commerce features",
+      "I want to build an AI agent",
+      "Mobile app packages",
+      "I want to automate my business",
+      "I’m planning a game project",
+      "Finance system packages",
+      "All starting prices",
+      "Delivery timelines",
+      "Which technologies do you use?",
+      "How does the project process work?",
+      "Is post-launch support available?",
+      "Do you use ready-made themes?",
+      "What add-ons are available?",
+      "I’d like to get in touch",
+    ],
+    assistantLabel: "c0denail project assistant",
+    status: "Project consultant · online",
+    resetLabel: "Start a new chat",
+    resetTitle: "New chat",
+    closeLabel: "Close chat",
+    loadingLabel: "Preparing a response",
+    quickStart: "Quick start",
+    quoteLabel: "For a detailed quote",
+    contactButton: "Go to the contact form",
+    placeholder: "Ask something about your project…",
+    messageLabel: "Your message",
+    sendLabel: "Send message",
+    send: "Send",
+    disclaimer:
+      "Answers are limited to the content on this site; the final scope is confirmed during a call.",
+    launcherTitle: "Have an idea?",
+    launcherSubtitle: "Ask the assistant",
+    openLabel: "Open project assistant",
+    responseError: "No response was received.",
+    genericError: "I can’t generate a response right now. Please try again.",
+  },
+} satisfies Record<Locale, Record<string, string | string[]>>;
+
+function getStartMessage(locale: Locale): Message {
+  return {
+    id: "welcome",
+    role: "assistant",
+    content: CHAT_COPY[locale].welcome,
+  };
+}
 
 function makeId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -73,14 +145,17 @@ function RobotMascot({ thinking = false }: { thinking?: boolean }) {
   );
 }
 
-export default function Chatbot() {
+export default function Chatbot({ locale }: { locale: Locale }) {
+  const copy = CHAT_COPY[locale];
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([START_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([getStartMessage(locale)]);
   const [visitorId, setVisitorId] = useState("guest");
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const localeRef = useRef(locale);
+  localeRef.current = locale;
 
   useEffect(() => {
     const stored = window.localStorage.getItem("c0denail-chat-visitor");
@@ -118,6 +193,7 @@ export default function Chatbot() {
   const sendMessage = async (rawMessage: string) => {
     const content = rawMessage.trim();
     if (!content || isLoading) return;
+    const requestLocale = locale;
 
     const userMessage: Message = {
       id: makeId("user"),
@@ -136,6 +212,7 @@ export default function Chatbot() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             visitorId,
+            locale: requestLocale,
             messages: nextMessages
               .filter((message) => !message.isError)
               .slice(-12)
@@ -147,11 +224,15 @@ export default function Chatbot() {
         }),
         new Promise((resolve) => window.setTimeout(resolve, 650)),
       ]);
-      const result = (await response.json()) as { message?: string };
+      const result = (await response.json().catch(() => ({}))) as {
+        message?: string;
+      };
 
       if (!response.ok || !result.message) {
-        throw new Error(result.message || "Yanıt alınamadı.");
+        throw new ChatResponseError(result.message || copy.responseError);
       }
+
+      if (localeRef.current !== requestLocale) return;
 
       setMessages((current) => [
         ...current,
@@ -162,15 +243,16 @@ export default function Chatbot() {
         },
       ]);
     } catch (error) {
+      if (localeRef.current !== requestLocale) return;
       setMessages((current) => [
         ...current,
         {
           id: makeId("error"),
           role: "assistant",
           content:
-            error instanceof Error
+            error instanceof ChatResponseError
               ? error.message
-              : "Şu anda yanıt oluşturamıyorum. Lütfen tekrar dene.",
+              : copy.genericError,
           isError: true,
         },
       ]);
@@ -185,7 +267,7 @@ export default function Chatbot() {
   };
 
   const resetChat = () => {
-    setMessages([START_MESSAGE]);
+    setMessages([getStartMessage(locale)]);
     setInput("");
     setIsLoading(false);
     window.setTimeout(() => inputRef.current?.focus(), 0);
@@ -201,7 +283,7 @@ export default function Chatbot() {
   const hasConversation = messages.some((message) => message.role === "user");
 
   return (
-    <aside className={styles.chatbot} aria-label="c0denail proje asistanı">
+    <aside className={styles.chatbot} aria-label={copy.assistantLabel}>
       <section
         className={`${styles.panel} ${isOpen ? styles.panelOpen : ""}`}
         id="c0denail-chat-panel"
@@ -214,15 +296,15 @@ export default function Chatbot() {
           <span className={styles.headerCopy}>
             <strong>c0denail assistant</strong>
             <small>
-              <i /> Proje danışmanı · çevrimiçi
+              <i /> {copy.status}
             </small>
           </span>
           <button
             className={styles.resetButton}
             type="button"
             onClick={resetChat}
-            aria-label="Yeni sohbet başlat"
-            title="Yeni sohbet"
+            aria-label={copy.resetLabel}
+            title={copy.resetTitle}
           >
             ↻
           </button>
@@ -230,7 +312,7 @@ export default function Chatbot() {
             className={styles.closeButton}
             type="button"
             onClick={() => setIsOpen(false)}
-            aria-label="Sohbeti kapat"
+            aria-label={copy.closeLabel}
           >
             ×
           </button>
@@ -254,7 +336,7 @@ export default function Chatbot() {
                   message.role === "user" ? styles.userMessage : styles.assistantMessage
                 } ${message.isError ? styles.errorMessage : ""}`}
               >
-                {message.content}
+                {message.id === "welcome" ? copy.welcome : message.content}
               </p>
             </div>
           ))}
@@ -265,7 +347,7 @@ export default function Chatbot() {
                 <RobotMascot thinking />
               </span>
               <div className={`${styles.message} ${styles.assistantMessage}`}>
-                <span className={styles.typingDots} aria-label="Yanıt hazırlanıyor">
+                <span className={styles.typingDots} aria-label={copy.loadingLabel}>
                   <i />
                   <i />
                   <i />
@@ -278,9 +360,9 @@ export default function Chatbot() {
 
         {!hasConversation && (
           <div className={styles.quickArea}>
-            <span>Hızlı başlangıç</span>
+            <span>{copy.quickStart}</span>
             <div className={styles.quickPrompts}>
-              {QUICK_PROMPTS.map((prompt) => (
+              {copy.quickPrompts.map((prompt) => (
                 <button
                   type="button"
                   key={prompt}
@@ -295,9 +377,9 @@ export default function Chatbot() {
         )}
 
         <div className={styles.contactStrip}>
-          <span>Detaylı teklif için</span>
+          <span>{copy.quoteLabel}</span>
           <button type="button" onClick={openContact}>
-            İletişim formuna git <i>↗</i>
+            {copy.contactButton} <i>↗</i>
           </button>
         </div>
 
@@ -308,21 +390,21 @@ export default function Chatbot() {
             value={input}
             onChange={(event) => setInput(event.target.value)}
             maxLength={1200}
-            placeholder="Projenle ilgili bir şey sor…"
-            aria-label="Mesajın"
+            placeholder={copy.placeholder}
+            aria-label={copy.messageLabel}
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            aria-label="Mesajı gönder"
+            aria-label={copy.sendLabel}
           >
-            <span>Gönder</span>
+            <span>{copy.send}</span>
             <i>↑</i>
           </button>
         </form>
         <small className={styles.disclaimer}>
-          Yanıtlar sitedeki içeriklerle sınırlıdır; kesin kapsam görüşmede netleşir.
+          {copy.disclaimer}
         </small>
       </section>
 
@@ -330,13 +412,13 @@ export default function Chatbot() {
         className={`${styles.launcher} ${isOpen ? styles.launcherOpen : ""}`}
         type="button"
         onClick={() => setIsOpen((open) => !open)}
-        aria-label={isOpen ? "Sohbeti kapat" : "Proje asistanını aç"}
+        aria-label={isOpen ? copy.closeLabel : copy.openLabel}
         aria-controls="c0denail-chat-panel"
         aria-expanded={isOpen}
       >
         <span className={styles.launcherLabel}>
-          <strong>Bir fikrin mi var?</strong>
-          <small>Asistana sor</small>
+          <strong>{copy.launcherTitle}</strong>
+          <small>{copy.launcherSubtitle}</small>
         </span>
         <RobotMascot thinking={isLoading} />
       </button>

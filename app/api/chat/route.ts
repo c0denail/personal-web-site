@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getSiteAnswer } from "../../data/chatbot-knowledge";
+import type { Locale } from "../../i18n";
 
 export const runtime = "nodejs";
 
@@ -19,6 +20,22 @@ const RATE_LIMIT = 15;
 const MAX_MESSAGES = 12;
 const MAX_MESSAGE_LENGTH = 1200;
 
+const API_COPY = {
+  tr: {
+    invalidRequest: "Geçersiz istek.",
+    invalidLocale: "Desteklenmeyen dil seçeneği.",
+    missingMessage: "Göndermek için geçerli bir mesaj yazmalısın.",
+    rateLimit:
+      "Kısa sürede çok fazla mesaj gönderildi. Birkaç dakika sonra tekrar dene.",
+  },
+  en: {
+    invalidRequest: "Invalid request.",
+    invalidLocale: "Unsupported language selection.",
+    missingMessage: "Please enter a valid message before sending.",
+    rateLimit: "Too many messages were sent in a short time. Please try again in a few minutes.",
+  },
+} satisfies Record<Locale, Record<string, string>>;
+
 const globalRateLimit = globalThis as typeof globalThis & {
   c0denailChatRateLimit?: Map<string, RateEntry>;
 };
@@ -33,6 +50,16 @@ function getRequestAddress(request: NextRequest) {
     request.headers.get("x-real-ip") ||
     "anonymous"
   );
+}
+
+function isLocale(value: unknown): value is Locale {
+  return value === "tr" || value === "en";
+}
+
+function getHeaderLocale(request: NextRequest): Locale {
+  return request.headers.get("accept-language")?.toLowerCase().startsWith("en")
+    ? "en"
+    : "tr";
 }
 
 function isRateLimited(identifier: string) {
@@ -73,17 +100,35 @@ function normalizeMessages(value: unknown): ChatMessage[] {
 }
 
 export async function POST(request: NextRequest) {
-  let body: { messages?: unknown; visitorId?: unknown };
+  const headerLocale = getHeaderLocale(request);
+  let body: { messages?: unknown; visitorId?: unknown; locale?: unknown };
   try {
-    body = (await request.json()) as typeof body;
+    const parsedBody: unknown = await request.json();
+    if (!parsedBody || typeof parsedBody !== "object" || Array.isArray(parsedBody)) {
+      throw new Error("Invalid request body");
+    }
+    body = parsedBody as typeof body;
   } catch {
-    return NextResponse.json({ message: "Geçersiz istek." }, { status: 400 });
+    return NextResponse.json(
+      { message: API_COPY[headerLocale].invalidRequest },
+      { status: 400 },
+    );
   }
+
+  if (body.locale !== undefined && !isLocale(body.locale)) {
+    return NextResponse.json(
+      { message: API_COPY[headerLocale].invalidLocale },
+      { status: 400 },
+    );
+  }
+
+  const locale: Locale = isLocale(body.locale) ? body.locale : "tr";
+  const copy = API_COPY[locale];
 
   const messages = normalizeMessages(body.messages);
   if (!messages.length || messages.at(-1)?.role !== "user") {
     return NextResponse.json(
-      { message: "Göndermek için geçerli bir mesaj yazmalısın." },
+      { message: copy.missingMessage },
       { status: 400 },
     );
   }
@@ -98,7 +143,7 @@ export async function POST(request: NextRequest) {
 
   if (isRateLimited(rateIdentifier)) {
     return NextResponse.json(
-      { message: "Kısa sürede çok fazla mesaj gönderildi. Birkaç dakika sonra tekrar dene." },
+      { message: copy.rateLimit },
       { status: 429 },
     );
   }
@@ -111,7 +156,7 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json(
     {
-      message: getSiteAnswer(lastMessage, conversation),
+      message: getSiteAnswer(lastMessage, conversation, locale),
       source: "site-content",
     },
     {

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Locale } from "../../i18n";
 
 export const runtime = "nodejs";
 
@@ -8,6 +9,33 @@ const RATE_LIMIT_MAX_REQUESTS = 5;
 
 const requestLog = new Map<string, number[]>();
 
+const API_COPY = {
+  tr: {
+    invalidRequest: "Geçersiz istek.",
+    invalidLocale: "Desteklenmeyen dil seçeneği.",
+    rateLimit: "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin.",
+    invalidForm: "Geçersiz form verisi.",
+    invalidFields: "Lütfen zorunlu alanları geçerli bilgilerle doldurun.",
+    serviceUnavailable:
+      "Gönderim servisi şu anda hazır değil. Lütfen doğrudan e-posta gönderin.",
+    serviceUnreachable:
+      "Gönderim servisine ulaşılamadı. Lütfen biraz sonra tekrar deneyin.",
+    sendFailed: "Mesaj gönderilemedi. Lütfen biraz sonra tekrar deneyin.",
+  },
+  en: {
+    invalidRequest: "Invalid request.",
+    invalidLocale: "Unsupported language selection.",
+    rateLimit: "Too many attempts were made. Please try again later.",
+    invalidForm: "Invalid form data.",
+    invalidFields: "Please complete all required fields with valid information.",
+    serviceUnavailable:
+      "The delivery service is not available right now. Please email us directly.",
+    serviceUnreachable:
+      "The delivery service could not be reached. Please try again later.",
+    sendFailed: "Your message could not be sent. Please try again later.",
+  },
+} satisfies Record<Locale, Record<string, string>>;
+
 type ContactRequest = {
   name?: unknown;
   email?: unknown;
@@ -16,7 +44,18 @@ type ContactRequest = {
   budget?: unknown;
   message?: unknown;
   website?: unknown;
+  locale?: unknown;
 };
+
+function isLocale(value: unknown): value is Locale {
+  return value === "tr" || value === "en";
+}
+
+function getHeaderLocale(request: Request): Locale {
+  return request.headers.get("accept-language")?.toLowerCase().startsWith("en")
+    ? "en"
+    : "tr";
+}
 
 function clean(value: unknown, maxLength: number) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
@@ -48,28 +87,28 @@ function isRateLimited(identifier: string) {
 }
 
 export async function POST(request: Request) {
+  const headerLocale = getHeaderLocale(request);
   const origin = request.headers.get("origin");
   const host = request.headers.get("host");
 
   if (origin && host) {
     try {
       if (new URL(origin).host !== host) {
-        return NextResponse.json({ message: "Geçersiz istek." }, { status: 403 });
+        return NextResponse.json(
+          { message: API_COPY[headerLocale].invalidRequest },
+          { status: 403 },
+        );
       }
     } catch {
-      return NextResponse.json({ message: "Geçersiz istek." }, { status: 403 });
+      return NextResponse.json(
+        { message: API_COPY[headerLocale].invalidRequest },
+        { status: 403 },
+      );
     }
   }
 
   const forwardedFor = request.headers.get("x-forwarded-for");
   const identifier = forwardedFor?.split(",")[0]?.trim() || "unknown";
-
-  if (isRateLimited(identifier)) {
-    return NextResponse.json(
-      { message: "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin." },
-      { status: 429 },
-    );
-  }
 
   let payload: ContactRequest;
 
@@ -86,7 +125,24 @@ export async function POST(request: Request) {
 
     payload = parsedPayload as ContactRequest;
   } catch {
-    return NextResponse.json({ message: "Geçersiz form verisi." }, { status: 400 });
+    return NextResponse.json(
+      { message: API_COPY[headerLocale].invalidForm },
+      { status: 400 },
+    );
+  }
+
+  if (payload.locale !== undefined && !isLocale(payload.locale)) {
+    return NextResponse.json(
+      { message: API_COPY[headerLocale].invalidLocale },
+      { status: 400 },
+    );
+  }
+
+  const locale: Locale = isLocale(payload.locale) ? payload.locale : "tr";
+  const copy = API_COPY[locale];
+
+  if (isRateLimited(identifier)) {
+    return NextResponse.json({ message: copy.rateLimit }, { status: 429 });
   }
 
   const name = clean(payload.name, 80);
@@ -104,7 +160,7 @@ export async function POST(request: Request) {
 
   if (!name || !EMAIL_PATTERN.test(email) || !service || !budget || message.length < 10) {
     return NextResponse.json(
-      { message: "Lütfen zorunlu alanları geçerli bilgilerle doldurun." },
+      { message: copy.invalidFields },
       { status: 400 },
     );
   }
@@ -116,7 +172,7 @@ export async function POST(request: Request) {
   if (!apiKey || !fromEmail) {
     console.error("Contact form email configuration is missing.");
     return NextResponse.json(
-      { message: "Gönderim servisi şu anda hazır değil. Lütfen doğrudan e-posta gönderin." },
+      { message: copy.serviceUnavailable },
       { status: 503 },
     );
   }
@@ -129,6 +185,7 @@ export async function POST(request: Request) {
     `Şirket / marka: ${company || "Belirtilmedi"}`,
     `İlgilenilen hizmet: ${service}`,
     `Bütçe: ${budget}`,
+    `Dil: ${locale === "tr" ? "Türkçe (tr)" : "English (en)"}`,
     "",
     "Proje notu:",
     message,
@@ -155,7 +212,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Resend email request could not be completed.", error);
     return NextResponse.json(
-      { message: "Gönderim servisine ulaşılamadı. Lütfen biraz sonra tekrar deneyin." },
+      { message: copy.serviceUnreachable },
       { status: 502 },
     );
   }
@@ -164,7 +221,7 @@ export async function POST(request: Request) {
     const providerError = await resendResponse.text();
     console.error("Resend email request failed.", resendResponse.status, providerError.slice(0, 500));
     return NextResponse.json(
-      { message: "Mesaj gönderilemedi. Lütfen biraz sonra tekrar deneyin." },
+      { message: copy.sendFailed },
       { status: 502 },
     );
   }
